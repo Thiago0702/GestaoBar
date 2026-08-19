@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gestão Bar</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- MENU LATERAL -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <div class="logo-icon">🍺</div>
+
+                <div>
+                    <h2>BAR DO THIAGO</h2>
+                    <span>Gestão de Vendas</span>
+                </div>
+            </div>
+
+            <nav class="menu">
+
+                <a href="#" class="menu-item active">
+                    <span>🏠</span>
+                    Dashboard
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>🛒</span>
+                    Vendas
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📦</span>
+                    Estoque
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>🍔</span>
+                    Produtos
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>📊</span>
+                    Relatórios
+                </a>
+
+                <a href="#" class="menu-item">
+                    <span>⚙️</span>
+                    Configurações
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <main class="main-content">
+
+            <!-- CABEÇALHO -->
+            <header class="topbar">
+
+                <div class="mobile-logo">
+                    <span>🍺</span>
+                    <strong>BAR DO THIAGO</strong>
+                </div>
+
+                <div class="topbar-actions">
+                    <button class="notification">
+                        🔔
+                        <span>3</span>
+                    </button>
+                </div>
+
+            </header>
+
+
+            <!-- SAUDAÇÃO -->
+            <section class="welcome">
+
+                <div>
+                    <h1>Bom dia, Thiago! 👋</h1>
+                    <p>Aqui está o resumo do seu bar hoje.</p>
+                </div>
+
+                <div class="date-card">
+                    📅
+                    <div>
+                        <strong id="current-date">--/--/----</strong>
+                        <span id="current-day">---</span>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- INDICADORES -->
+            <section class="stats-grid">
+
+                <div class="stat-card green">
+
+                    <div class="stat-icon">💰</div>
+
+                    <div>
+                        <span class="stat-title">
+                            FATURAMENTO HOJE
+                        </span>
+
+                        <strong>R$ 0,00</strong>
+
+                        <small>
+                            Sem vendas registradas
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card blue">
+
+                    <div class="stat-icon">🛒</div>
+
+                    <div>
+                        <span class="stat-title">
+                            VENDAS HOJE
+                        </span>
+
+                        <strong>0</strong>
+
+                        <small>
+                            vendas realizadas
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card purple">
+
+                    <div class="stat-icon">🎫</div>
+
+                    <div>
+                        <span class="stat-title">
+                            TICKET MÉDIO
+                        </span>
+
+                        <strong>R$ 0,00</strong>
+
+                        <small>
+                            por venda
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card orange">
+
+                    <div class="stat-icon">📈</div>
+
+                    <div>
+                        <span class="stat-title">
+                            LUCRO ESTIMADO
+                        </span>
+
+                        <strong>R$ 0,00</strong>
+
+                        <small>
+                            aguardando vendas
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card red">
+
+                    <div class="stat-icon">🗑️</div>
+
+                    <div>
+                        <span class="stat-title">
+                            PERDAS HOJE
+                        </span>
+
+                        <strong>R$ 0,00</strong>
+
+                        <small>
+                            nenhuma perda registrada
+                        </small>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card cyan">
+
+                    <div class="stat-icon">📦</div>
+
+                    <div>
+                        <span class="stat-title">
+                            PRODUTOS
+                        </span>
+
+                        <strong>0</strong>
+
+                        <small>
+                            produtos cadastrados
+                        </small>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ESTOQUE BAIXO -->
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h2>⚠️ Estoque baixo</h2>
+                        <p>Produtos que precisam de atenção</p>
+                    </div>
+
+                    <button class="link-button">
+                        Ver todos →
+                    </button>
+
+                </div>
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">📦</div>
+
+                    <h3>Nenhum produto cadastrado</h3>
+
+                    <p>
+                        Quando começarmos a cadastrar os produtos,
+                        os itens com estoque baixo aparecerão aqui.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- AÇÕES RÁPIDAS -->
+            <section class="panel">
+
+                <div class="panel-header">
+                    <div>
+                        <h2>Ações rápidas</h2>
+                        <p>Operações mais utilizadas</p>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+
+                    <button class="action-button green-button">
+                        <span>🛒</span>
+                        <strong>Nova Venda</strong>
+                    </button>
+
+                    <button class="action-button blue-button">
+                        <span>➕</span>
+                        <strong>Nova Entrada</strong>
+                    </button>
+
+                    <button class="action-button orange-button">
+                        <span>🗑️</span>
+                        <strong>Registrar Perda</strong>
+                    </button>
+
+                    <button class="action-button purple-button">
+                        <span>🔎</span>
+                        <strong>Buscar Produto</strong>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- RODAPÉ -->
+            <footer>
+
+                <p>
+                    Gestão Bar © 2026
+                </p>
+
+                <span>
+                    Sistema de Gestão de Vendas e Estoque
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- MENU MOBILE -->
+    <nav class="mobile-menu">
+
+        <a href="#" class="active">
+            <span>🏠</span>
+            <small>Início</small>
+        </a>
+
+        <a href="#">
+            <span>🛒</span>
+            <small>Vendas</small>
+        </a>
+
+        <a href="#">
+            <span>📦</span>
+            <small>Estoque</small>
+        </a>
+
+        <a href="#">
+            <span>📊</span>
+            <small>Relatórios</small>
+        </a>
+
+        <a href="#">
+            <span>•••</span>
+            <small>Mais</small>
+        </a>
+
+    </nav>
+
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
