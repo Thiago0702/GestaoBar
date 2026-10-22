@@ -232,3 +232,39 @@ class ItemVenda(db.Model):
         "Mercadoria",
         backref="itens_venda"
     )
+
+
+class Perda(db.Model):
+    __tablename__ = "perdas"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    mercadoria_id = db.Column(
+        db.Integer,
+        db.ForeignKey("mercadoria.id"),
+        nullable=False
+    )
+
+    quantidade = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    motivo = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+    data_hora = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=db.func.now()
+    )
+
+    mercadoria = db.relationship(
+        "Mercadoria",
+        backref="perdas"
+    )
