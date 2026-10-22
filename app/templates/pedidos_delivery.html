@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos Delivery | GestãoBar</title>
+
+    <style>
+        :root {
+            --fundo: #111111;
+            --card: #1c1c1c;
+            --dourado: #d4af37;
+            --texto: #f5f5f5;
+            --suave: #bdbdbd;
+            --borda: #393939;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: var(--dourado);
+        }
+
+        .subtitulo {
+            margin: 0;
+            color: var(--suave);
+        }
+
+        .botao {
+            display: inline-block;
+            padding: 11px 16px;
+            border: 1px solid var(--dourado);
+            border-radius: 8px;
+            background: transparent;
+            color: var(--dourado);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .botao:hover {
+            background: var(--dourado);
+            color: #111;
+        }
+
+        .lista {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+            gap: 20px;
+        }
+
+        .pedido {
+            padding: 20px;
+            background: var(--card);
+            border: 1px solid var(--borda);
+            border-top: 4px solid var(--dourado);
+            border-radius: 12px;
+        }
+
+        .pedido-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pedido h2 {
+            margin: 0;
+            color: var(--dourado);
+            font-size: 21px;
+        }
+
+        .selo {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #38301b;
+            color: #f5d879;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 7px;
+            background: #292929;
+            font-weight: bold;
+        }
+
+        .detalhe {
+            margin: 9px 0;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .detalhe strong {
+            color: var(--dourado);
+        }
+
+        .itens {
+            margin: 18px 0;
+            padding: 14px 0;
+            border-top: 1px solid var(--borda);
+            border-bottom: 1px solid var(--borda);
+        }
+
+        .itens h3 {
+            margin-top: 0;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .valores p {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .total {
+            padding-top: 12px;
+            border-top: 1px solid var(--borda);
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--dourado);
+        }
+
+        .acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 20px;
+        }
+
+        .acoes form {
+            margin: 0;
+        }
+
+        .botao-acao {
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 7px;
+            background: var(--dourado);
+            color: #111;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .vazio {
+            padding: 35px 20px;
+            border: 1px dashed var(--borda);
+            border-radius: 12px;
+            color: var(--suave);
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 14px;
+            }
+
+            .pedido {
+                padding: 16px;
+            }
+
+            header .botao {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="container">
+
+    <header>
+        <div>
+            <h1>🚚 GestãoBar | Delivery</h1>
+            <p class="subtitulo">
+                Acompanhe os pedidos recebidos e as entregas.
+            </p>
+        </div>
+
+        <a class="botao" href="{{ url_for('inicio') }}">
+            Voltar ao GestãoBar
+        </a>
+    </header>
+
+    <section class="lista">
+
+        {% for venda in vendas %}
+        <article class="pedido">
+
+            <div class="pedido-topo">
+                <h2>Pedido #{{ venda.id }}</h2>
+                <span class="selo">DELIVERY</span>
+            </div>
+
+            <p class="status">
+                Status:
+                {% if venda.status == "recebido" %}
+                    🟡 Recebido
+                {% elif venda.status == "em_preparo" %}
+                    🍳 Em preparo
+                {% elif venda.status == "pronto" %}
+                    🟢 Pronto para sair
+                {% elif venda.status == "saiu_para_entrega" %}
+                    🛵 Saiu para entrega
+                {% elif venda.status == "entregue" %}
+                    ✅ Entregue
+                {% else %}
+                    {{ venda.status }}
+                {% endif %}
+            </p>
+
+            <p class="detalhe">
+                <strong>Cliente:</strong>
+                {{ venda.cliente_nome or "Não informado" }}
+            </p>
+
+            <p class="detalhe">
+                <strong>Telefone:</strong>
+                {{ venda.cliente_telefone or "Não informado" }}
+            </p>
+
+            <p class="detalhe">
+                <strong>Endereço:</strong>
+                {{ venda.cliente_endereco or "Não informado" }},
+                {{ venda.cliente_numero or "S/N" }}
+                {% if venda.cliente_complemento %}
+                    — {{ venda.cliente_complemento }}
+                {% endif %}
+            </p>
+
+            <p class="detalhe">
+                <strong>Bairro:</strong>
+                {{ venda.cliente_bairro or "Não informado" }}
+            </p>
+
+            {% if venda.cliente_cep %}
+            <p class="detalhe">
+                <strong>CEP:</strong> {{ venda.cliente_cep }}
+            </p>
+            {% endif %}
+
+            <p class="detalhe">
+                <strong>Pagamento:</strong>
+                {{ venda.forma_pagamento or "Não informado" }}
+            </p>
+
+            <div class="itens">
+                <h3>Itens do pedido</h3>
+
+                {% for item in venda.itens %}
+                <div class="item">
+                    <span>
+                        {{ item.quantidade }}x
+                        {{ item.mercadoria.nome if item.mercadoria else "Produto indisponível" }}
+                    </span>
+                    <strong>
+                        R$ {{ "%.2f"|format(item.subtotal or 0) }}
+                    </strong>
+                </div>
+                {% else %}
+                <p>Nenhum item registrado.</p>
+                {% endfor %}
+            </div>
+
+            <div class="valores">
+                <p>
+                    <span>Frete</span>
+                    <strong>
+                        R$ {{ "%.2f"|format(venda.taxa_entrega or 0) }}
+                    </strong>
+                </p>
+
+                <p class="total">
+                    <span>Total</span>
+                    <span>
+                        R$ {{ "%.2f"|format(venda.total or 0) }}
+                    </span>
+                </p>
+            </div>
+
+            <div class="acoes">
+                {% if venda.status == "recebido" %}
+                <form method="POST"
+                      action="{{ url_for('delivery_pedido_preparo', venda_id=venda.id) }}">
+                    <button class="botao-acao" type="submit">
+                        Iniciar preparo
+                    </button>
+                </form>
+                {% endif %}
+
+                {% if venda.status == "em_preparo" %}
+                <form method="POST"
+                      action="{{ url_for('delivery_pedido_pronto', venda_id=venda.id) }}">
+                    <button class="botao-acao" type="submit">
+                        Pedido pronto
+                    </button>
+                </form>
+                {% endif %}
+
+                {% if venda.status == "pronto" %}
+                <form method="POST"
+                      action="{{ url_for('delivery_saiu_entrega', venda_id=venda.id) }}">
+                    <button class="botao-acao" type="submit">
+                        Saiu para entrega
+                    </button>
+                </form>
+                {% endif %}
+
+                {% if venda.status == "saiu_para_entrega" %}
+                <form method="POST"
+                      action="{{ url_for('delivery_pedido_entregue', venda_id=venda.id) }}">
+                    <button class="botao-acao" type="submit">
+                        Confirmar entrega
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+
+        </article>
+        {% else %}
+        <div class="vazio">
+            <h2>Nenhum pedido de delivery</h2>
+            <p>Quando um cliente finalizar um pedido, ele aparecerá aqui.</p>
+        </div>
+        {% endfor %}
+
+    </section>
+</main>
+</body>
+</html>

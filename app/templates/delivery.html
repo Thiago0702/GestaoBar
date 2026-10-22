@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delivery - Coelho Bar e Hamburgueria</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+        }
+
+        .delivery-home {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .delivery-home img {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            object-fit: fill;
+            margin: 0;
+        }
+        /*
+        ÁREAS CLICÁVEIS DOS 5 CARDS
+        */
+
+       .categoria {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .categoria-1 {
+            left: 1%;
+            bottom: 0;
+            width: 19%;
+            height: 28%;
+        }
+        
+
+        .categoria-2 {
+            left: 23%;
+            width: 18%;
+        }
+
+        .categoria-3 {
+            left: 42%;
+            width: 18%;
+        }
+
+        .categoria-4 {
+            left: 61%;
+            width: 18%;
+        }
+
+        .categoria-5 {
+            left: 80%;
+            width: 18%;
+        }
+
+        /*
+        MOBILE
+        */
+
+        @media (min-width: 601px) {
+            .delivery-home {
+                margin-top: 20px;
+                box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="delivery-home">
+
+        <!-- IMAGEM EXATA DA TELA PRINCIPAL -->
+
+        <img
+            src="{{ url_for('static', filename='img/delivery_home.png') }}"
+            alt="Delivery Coelho Bar e Hamburgueria"
+        >
+
+        <!-- ÁREAS CLICÁVEIS -->
+
+        <a
+            href="/delivery/cardapio?categoria=Hambúrgueres"
+            class="categoria categoria-1"
+            aria-label="Hambúrgueres"
+        ></a>
+
+        <a
+            href="/delivery/cardapio?categoria=Lanches"
+            class="categoria categoria-2"
+            aria-label="Lanches"
+        ></a>
+
+        <a
+            href="/delivery/cardapio?categoria=Porções"
+            class="categoria categoria-3"
+            aria-label="Porções"
+        ></a>
+
+        <a
+            href="/delivery/cardapio?categoria=Refrigerantes"
+            class="categoria categoria-4"
+            aria-label="Refrigerantes"
+        ></a>
+
+        <a
+            href="/delivery/cardapio?categoria=Cervejas Lata"
+            class="categoria categoria-5"
+            aria-label="Cervejas Lata"
+        ></a>
+
+    </main>
+
+</body>
+
+</html>

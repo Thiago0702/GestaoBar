@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Histórico de Perdas - GestãoBar</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .valor {
+            font-weight: bold;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Histórico de Perdas</h1>
+
+        {% if perdas %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Data/Hora</th>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Motivo</th>
+                        <th>Valor da Perda</th>
+                        <th>Usuário</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for perda in perdas %}
+
+                    <tr>
+
+                        <td>
+                            {{ perda.data_hora }}
+                        </td>
+
+                        <td>
+                            {{ perda.produto }}
+                        </td>
+
+                        <td>
+                            {{ perda.quantidade }}
+                        </td>
+
+                        <td>
+                            {{ perda.motivo or "Não informado" }}
+                        </td>
+
+                        <td class="valor">
+                            R$ {{ "%.2f"|format(perda.preco_custo * perda.quantidade)|replace(".", ",") }}
+                        </td>
+
+                        <td>
+                            {{ perda.usuario }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="vazio">
+            Nenhuma perda registrada.
+        </div>
+
+        {% endif %}
+
+        <a href="{{ url_for('inicio') }}" class="voltar">
+            ← Voltar para o Dashboard
+        </a>
+
+    </div>
+
+</body>
+
+</html>

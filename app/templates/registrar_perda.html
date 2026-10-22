@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registrar Perda - GestãoBar</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select,
+        input,
+        textarea,
+        button {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            margin-top: 20px;
+            background: #222;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .voltar {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.voltar:hover {
+    background: #444;
+}
+    </style>
+</head>
+
+<body>
+
+    <a href="{{ url_for('inicio') }}" class="voltar">
+         ← Voltar ao GestãoBar
+    </a>
+
+    <div class="container">
+
+        <h1>Registrar Perda</h1>
+
+        <form method="POST">
+
+            <label for="mercadoria_id">
+                Produto
+            </label>
+
+            <select name="mercadoria_id" id="mercadoria_id" required>
+
+                <option value="">
+                    Selecione um produto
+                </option>
+
+                {% for produto in produtos %}
+
+                    <option value="{{ produto.id }}">
+                        {{ produto.nome }} — Estoque: {{ produto.quantidade }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+            <label for="quantidade">
+                Quantidade perdida
+            </label>
+
+            <input
+                type="number"
+                name="quantidade"
+                id="quantidade"
+                min="1"
+                required
+            >
+
+            <label for="motivo">
+                Motivo da perda
+            </label>
+
+            <textarea
+                name="motivo"
+                id="motivo"
+                placeholder="Ex.: produto vencido, quebrado, danificado..."
+            ></textarea>
+
+            <button type="submit">
+                Registrar Perda
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

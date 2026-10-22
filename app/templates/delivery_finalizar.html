@@ -1,0 +1,472 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar pedido - Coelho Bar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f1eb;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px #00000018;
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            color: #450000;
+        }
+
+        .descricao {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-weight: bold;
+            color: #450000;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .resumo {
+            margin-top: 25px;
+            padding: 16px;
+            border-radius: 10px;
+            background: #f8f3e8;
+        }
+
+        .aviso {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .botao {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #450000;
+            color: #d4af37;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .voltar {
+            margin-top: 10px;
+            background: #eee;
+            color: #450000;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Finalizar pedido</h1>
+
+        <p class="descricao">
+            Informe seus dados para receber seu pedido.
+        </p>
+
+        <form id="form-finalizar">
+            <label for="cliente_nome">Nome completo *</label>
+            <input
+                id="cliente_nome"
+                name="cliente_nome"
+                type="text"
+                autocomplete="name"
+                maxlength="120"
+                required
+            >
+
+            <label for="cliente_telefone">Celular / WhatsApp *</label>
+            <input
+                id="cliente_telefone"
+                name="cliente_telefone"
+                type="tel"
+                autocomplete="tel"
+                maxlength="20"
+                required
+            >
+
+            <label for="cliente_cep">CEP</label>
+            <input
+                id="cliente_cep"
+                name="cliente_cep"
+                type="text"
+                autocomplete="postal-code"
+                maxlength="9"
+            >
+
+            <label for="cliente_endereco">Rua / Avenida *</label>
+            <input
+                id="cliente_endereco"
+                name="cliente_endereco"
+                type="text"
+                autocomplete="street-address"
+                maxlength="180"
+                required
+            >
+
+            <label for="cliente_numero">Número *</label>
+            <input
+                id="cliente_numero"
+                name="cliente_numero"
+                type="text"
+                maxlength="20"
+                required
+            >
+
+            <label for="cliente_complemento">Complemento</label>
+            <input
+                id="cliente_complemento"
+                name="cliente_complemento"
+                type="text"
+                maxlength="100"
+            >
+
+
+<label for="cliente_bairro">Bairro *</label>
+<select id="cliente_bairro" name="cliente_bairro" required>
+    <option value="">Selecione seu bairro</option>
+    <option value="Giovane">Giovane</option>
+    <option value="Pq Recreio">Pq. Recreio</option>
+    <option value="Colônia">Colônia</option>
+    <option value="Chác. Eldorado">Chác. Eldorado</option>
+    <option value="Sta. Fé">Santa Fé</option>
+    <option value="Casa Coelho">Casa Coelho</option>
+    <option value="São Francisco">São Francisco</option>
+    <option value="Novo Parreleiros">Novo Parreleiros</option>
+    <option value="Parque Amazonas">Parque Amazonas</option>
+    <option value="Hosp. Parreleiros">Hosp. Parreleiros</option>
+    <option value="Vargem Grande">Vargem Grande</option>
+    <option value="Jd. Silveira">Jd. Silveira</option>
+    <option value="Álamos">Álamos</option>
+    <option value="Aladim">Aladim</option>
+    <option value="Padaria Troró">Padaria Troró</option>
+    <option value="Embura">Embura</option>
+    <option value="Jd. Fontes">Jd. Fontes</option>
+    <option value="Novo América">Novo América</option>
+    <option value="25º">25º</option>
+    <option value="Pq. Florestal">Pq. Florestal</option>
+    <option value="Vilela">Vilela</option>
+    <option value="Recanto">Recanto</option>
+    <option value="V. Marcelo">V. Marcelo</option>
+    <option value="São Norberto">São Norberto</option>
+    <option value="Papai Noel">Papai Noel</option>
+    <option value="Vila Rochel">Vila Rochel</option>
+    <option value="Progresso">Progresso</option>
+    <option value="Barragem">Barragem</option>
+    <option value="Jusa">Jusa</option>
+    <option value="Bosque Sol">Bosque Sol</option>
+    <option value="Fred">Fred</option>
+</select>
+            
+
+            <label for="forma_pagamento">Forma de pagamento *</label>
+            <select
+                id="forma_pagamento"
+                name="forma_pagamento"
+                required
+            >
+                <option value="">Selecione</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão de crédito">Cartão de crédito</option>
+                <option value="Cartão de débito">Cartão de débito</option>
+            </select>
+
+            <div id="campo-troco" hidden>
+                <label for="troco_para">Troco para quanto?</label>
+                <input
+                    id="troco_para"
+                    name="troco_para"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="Ex.: 100,00"
+                >
+            </div>
+
+            
+        <strong>Resumo do pedido</strong>
+        <p id="resumo-itens">Carregando itens...</p>
+        <p>Subtotal: <strong id="subtotal-produtos">R$ 0,00</strong></p>
+        <p>Frete: <strong id="valor-frete">Selecione o bairro</strong></p>
+        <p>Total estimado: <strong id="total-pedido">R$ 0,00</strong></p>
+        <p class="aviso">
+            O valor definitivo será validado pelo estabelecimento.
+        </p>
+
+            </div>
+
+            <button class="botao" type="submit">
+                Confirmar dados e continuar
+            </button>
+
+            <a
+                href="{{ url_for('delivery_carrinho') }}"
+                class="botao voltar"
+            >
+                Voltar ao carrinho
+            </a>
+        </form>
+    </main>
+
+    <script>
+        const campoPagamento = document.getElementById("forma_pagamento");
+        const campoTroco = document.getElementById("campo-troco");
+        const inputTroco = document.getElementById("troco_para");
+
+        campoPagamento.addEventListener("change", function () {
+            const dinheiro = this.value === "Dinheiro";
+            campoTroco.hidden = !dinheiro;
+            inputTroco.required = dinheiro;
+
+            if (!dinheiro) {
+                inputTroco.value = "";
+            }
+        });
+
+
+const fretesPorBairro = {
+    "Giovane": 9,
+    "Pq Recreio": 8,
+    "Colônia": 13,
+    "Chác. Eldorado": 6,
+    "Sta. Fé": 7,
+    "Casa Coelho": 6,
+    "São Francisco": 8,
+    "Novo Parreleiros": 6,
+    "Parque Amazonas": 6,
+    "Hosp. Parreleiros": 6,
+    "Vargem Grande": 11,
+    "Jd. Silveira": 9,
+    "Álamos": 8,
+    "Aladim": 8,
+    "Padaria Troró": 13,
+    "Embura": 20,
+    "Jd. Fontes": 20,
+    "Novo América": 20,
+    "25º": 6,
+    "Pq. Florestal": 16,
+    "Vilela": 15,
+    "Recanto": 17,
+    "V. Marcelo": 20,
+    "São Norberto": 13,
+    "Papai Noel": 13,
+    "Vila Rochel": 7,
+    "Progresso": 8,
+    "Barragem": 25,
+    "Jusa": 13,
+    "Bosque Sol": 7,
+    "Fred": 18
+};
+
+function moeda(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
+function carregarResumo() {
+    let carrinho = [];
+
+    try {
+        carrinho = JSON.parse(
+            localStorage.getItem("delivery_carrinho") || "[]"
+        );
+    } catch (erro) {
+        carrinho = [];
+    }
+
+    const botao = document.querySelector(
+        '#form-finalizar button[type="submit"]'
+    );
+
+    const resumo = document.getElementById("resumo-itens");
+    const subtotalElemento = document.getElementById("subtotal-produtos");
+    const freteElemento = document.getElementById("valor-frete");
+    const totalElemento = document.getElementById("total-pedido");
+
+    if (!Array.isArray(carrinho) || carrinho.length === 0) {
+        resumo.textContent = "Seu carrinho está vazio.";
+        subtotalElemento.textContent = moeda(0);
+        freteElemento.textContent = "—";
+        totalElemento.textContent = moeda(0);
+        botao.disabled = true;
+        return;
+    }
+
+    let subtotal = 0;
+    let quantidadeTotal = 0;
+
+    carrinho.forEach(function(item) {
+        const quantidade = Math.max(0, Number(item.quantidade) || 0);
+        const preco = Math.max(0, Number(item.preco) || 0);
+
+        subtotal += quantidade * preco;
+        quantidadeTotal += quantidade;
+    });
+
+    subtotal = Math.round((subtotal + Number.EPSILON) * 100) / 100;
+
+    resumo.textContent = quantidadeTotal + " item(ns)";
+    subtotalElemento.textContent = moeda(subtotal);
+
+    const bairro = document.getElementById("cliente_bairro").value;
+    const frete = fretesPorBairro[bairro];
+
+    if (bairro && frete !== undefined) {
+        freteElemento.textContent = moeda(frete);
+        totalElemento.textContent = moeda(subtotal + frete);
+        botao.disabled = false;
+    } else {
+        freteElemento.textContent = "Selecione o bairro";
+        totalElemento.textContent = "Aguardando bairro";
+        botao.disabled = true;
+    }
+}
+
+document.getElementById("cliente_bairro").addEventListener(
+    "change",
+    carregarResumo
+);
+        
+
+        
+document.getElementById("form-finalizar").addEventListener(
+    "submit",
+    async function (evento) {
+        evento.preventDefault();
+
+        const formulario = this;
+        const botao = formulario.querySelector(
+            'button[type="submit"]'
+        );
+
+        let carrinho = [];
+
+        try {
+            carrinho = JSON.parse(
+                localStorage.getItem("delivery_carrinho") || "[]"
+            );
+        } catch (erro) {
+            alert("Não foi possível ler o carrinho. Volte e confira os itens.");
+            return;
+        }
+
+        if (!Array.isArray(carrinho) || carrinho.length === 0) {
+            alert("Adicione produtos antes de continuar.");
+            return;
+        }
+
+        const dadosFormulario = Object.fromEntries(
+            new FormData(formulario).entries()
+        );
+
+        const pedido = {
+            ...dadosFormulario,
+            itens: carrinho.map(function (item) {
+                return {
+                    id: item.id,
+                    quantidade: item.quantidade
+                };
+            })
+        };
+
+        botao.disabled = true;
+        botao.textContent = "Enviando pedido...";
+
+        try {
+            const resposta = await fetch(
+                "{{ url_for('delivery_finalizar') }}",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(pedido)
+                }
+            );
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok || !resultado.sucesso) {
+                alert(
+                    resultado.mensagem ||
+                    "Não foi possível registrar o pedido."
+                );
+                return;
+            }
+
+            localStorage.removeItem("delivery_carrinho");
+            sessionStorage.removeItem("delivery_dados_cliente");
+
+            alert(
+                resultado.mensagem +
+                "\nTotal: " +
+                Number(resultado.total).toLocaleString("pt-BR", {
+                    style: "currency",
+                    currency: "BRL"
+                })
+            );
+
+            window.location.href =
+                "{{ url_for('delivery_cardapio') }}";
+
+        } catch (erro) {
+            alert(
+                "Não foi possível confirmar a comunicação com o sistema. " +
+                "Confira os pedidos antes de tentar novamente."
+            );
+        } finally {
+            botao.disabled = false;
+            botao.textContent = "Confirmar dados e continuar";
+        }
+    }
+);
+        carregarResumo();
+    </script>
+</body>
+</html>
+```

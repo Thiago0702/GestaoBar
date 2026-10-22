@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vendas - Coelho Bar e Hamburgueria</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #ddd;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .categoria {
+            margin-bottom: 25px;
+        }
+
+        .categoria h2 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .produto {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .produto-info {
+            flex: 1;
+        }
+
+        .produto-nome {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .produto-preco {
+            margin-top: 5px;
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .estoque {
+            font-size: 12px;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        .controles {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-qtd {
+            width: 38px;
+            height: 38px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-menos {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-mais {
+            background: #198754;
+            color: white;
+        }
+
+        .quantidade {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .carrinho {
+            position: sticky;
+            top: 15px;
+        }
+
+        .carrinho h2 {
+            margin-top: 0;
+        }
+
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-carrinho-info {
+            flex: 1;
+        }
+
+        .item-carrinho-nome {
+            font-weight: bold;
+        }
+
+        .item-carrinho-qtd {
+            font-size: 13px;
+            color: #777;
+            margin-top: 3px;
+        }
+
+        .item-carrinho-total {
+            font-weight: bold;
+        }
+
+        .carrinho-vazio {
+            text-align: center;
+            color: #777;
+            padding: 25px 0;
+        }
+
+        .total-area {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .finalizar {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #198754;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .finalizar:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .sem-produtos {
+            text-align: center;
+            color: #777;
+            padding: 30px;
+        }
+
+        .pesquisa-produto {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0 25px;
+    padding: 10px 14px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.pesquisa-produto span {
+    font-size: 20px;
+}
+
+.pesquisa-produto input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+}
+
+.pesquisa-produto input::placeholder {
+    color: #888;
+}
+
+        @media (max-width: 850px) {
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .carrinho {
+                position: static;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .produto {
+                align-items: flex-start;
+            }
+
+            .produto-nome {
+                font-size: 15px;
+            }
+
+            .btn-qtd {
+                width: 36px;
+                height: 36px;
+            }
+        }
+        .pagamento {
+    cursor: pointer;
+    padding: 12px 18px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.pagamento.selecionado {
+    border-color: #198754;
+    background: #e8f5e9;
+}
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🍔 Coelho Bar e Hamburgueria</h1>
+    <p>Nova Venda</p>
+</header>
+
+<div class="container">
+
+    <a href="{{ url_for('inicio') }}" class="voltar">
+        ← Voltar para o início
+    </a>
+
+    <div class="layout">
+
+        <!-- PRODUTOS -->
+
+        <div class="card">
+
+            <h2>🛒 Produtos</h2>
+
+            <div class="pesquisa-produto">
+            <span>🔎</span>
+            <input
+                type="text"
+                id="pesquisa"
+                placeholder="Pesquisar produto..."
+                autocomplete="off"
+            >
+            </div>
+
+            {% if produtos %}
+
+                {% set categoria_atual = namespace(nome="") %}
+
+                {% for produto in produtos %}
+
+                    {% if produto.categoria != categoria_atual.nome %}
+
+                        {% if not loop.first %}
+                            </div>
+                        {% endif %}
+
+                        {% set categoria_atual.nome = produto.categoria %}
+
+                        <div class="categoria">
+
+                            <h2>
+                                {{ produto.categoria }}
+                            </h2>
+
+                    {% endif %}
+
+                    <div
+                        class="produto"
+                        data-id="{{ produto.id }}"
+                        data-nome="{{ produto.nome }}"
+                        data-preco="{{ produto.preco_venda }}"
+                        data-estoque="{{ produto.quantidade }}"
+                    >
+
+                        <div class="produto-info">
+
+                            <div class="produto-nome">
+                                {{ produto.nome }}
+                            </div>
+
+                            <div class="produto-preco">
+                                R$ {{ "%.2f"|format(produto.preco_venda) }}
+                            </div>
+
+                            <div class="estoque">
+                                Estoque: {{ produto.quantidade }}
+                            </div>
+
+                        </div>
+
+                        <div class="controles">
+
+                            <button
+                                type="button"
+                                class="btn-qtd btn-menos"
+                                onclick="alterarQuantidade({{ produto.id }}, -1)"
+                            >
+                                −
+                            </button>
+
+                            <span
+                                class="quantidade"
+                                id="qtd-{{ produto.id }}"
+                            >
+                                0
+                            </span>
+
+                            <button
+                                type="button"
+                                class="btn-qtd btn-mais"
+                                onclick="alterarQuantidade({{ produto.id }}, 1)"
+                            >
+                                +
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    {% if loop.last %}
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="sem-produtos">
+                    Nenhuma mercadoria cadastrada.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CARRINHO -->
+
+        <div class="card carrinho">
+
+            <h2>🛒 Carrinho</h2>
+
+            <div id="lista-carrinho">
+
+                <div class="carrinho-vazio">
+                    Nenhum produto adicionado.
+                </div>
+
+            </div>
+
+            <div class="total-area">
+                <span>Total:</span>
+
+                <span id="total">
+                    R$ 0,00
+                </span>
+            </div>
+
+            <a
+                href="{{ url_for('historico_vendas') }}"
+                class="historico-vendas"
+            >
+                 📋 HISTÓRICO DE VENDAS
+            </a>
+
+            <div class="forma-pagamento">
+    <h3>💳 Forma de pagamento</h3>
+
+    <div class="opcoes-pagamento">
+
+        <button type="button" class="pagamento" data-forma="Dinheiro">
+            💵 Dinheiro
+        </button>
+
+        <button type="button" class="pagamento" data-forma="Pix">
+            📱 Pix
+        </button>
+
+        <button type="button" class="pagamento" data-forma="Débito">
+            💳 Débito
+        </button>
+
+        <button type="button" class="pagamento" data-forma="Crédito">
+            💳 Crédito
+        </button>
+
+    </div>
+</div>
+
+            <button
+                type="button"
+                class="finalizar"
+                id="btn-finalizar"
+                disabled
+                onclick="finalizarVenda()"
+            >
+                ✅ FINALIZAR VENDA
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const carrinho = {};
+
+
+    function alterarQuantidade(id, alteracao) {
+
+        const produto = document.querySelector(
+            `.produto[data-id="${id}"]`
+        );
+
+        if (!produto) {
+            return;
+        }
+
+        const nome = produto.dataset.nome;
+        const preco = parseFloat(produto.dataset.preco);
+        const estoque = parseInt(produto.dataset.estoque);
+
+        if (!carrinho[id]) {
+
+            carrinho[id] = {
+                id: id,
+                nome: nome,
+                preco: preco,
+                quantidade: 0,
+                estoque: estoque
+            };
+
+        }
+
+        const novaQuantidade =
+            carrinho[id].quantidade + alteracao;
+
+
+        if (novaQuantidade < 0) {
+            return;
+        }
+
+
+        if (novaQuantidade > estoque) {
+
+            alert(
+                "Quantidade maior que o estoque disponível."
+            );
+
+            return;
+        }
+
+
+        carrinho[id].quantidade = novaQuantidade;
+
+
+        if (carrinho[id].quantidade === 0) {
+            delete carrinho[id];
+        }
+
+
+        atualizarTela();
+    }
+
+
+    function atualizarTela() {
+
+        let total = 0;
+
+        const lista =
+            document.getElementById("lista-carrinho");
+
+        lista.innerHTML = "";
+
+
+        const itens =
+            Object.values(carrinho);
+
+
+        if (itens.length === 0) {
+
+            lista.innerHTML =
+                '<div class="carrinho-vazio">' +
+                'Nenhum produto adicionado.' +
+                '</div>';
+
+        } else {
+
+            itens.forEach(item => {
+
+                const subtotal =
+                    item.preco * item.quantidade;
+
+                total += subtotal;
+
+
+                const div =
+                    document.createElement("div");
+
+                div.className = "item-carrinho";
+
+                div.innerHTML = `
+
+                    <div class="item-carrinho-info">
+
+                        <div class="item-carrinho-nome">
+                            ${item.nome}
+                        </div>
+
+                        <div class="item-carrinho-qtd">
+                            ${item.quantidade} ×
+                            R$ ${item.preco.toFixed(2)}
+                        </div>
+
+                    </div>
+
+                    <div class="item-carrinho-total">
+                        R$ ${subtotal.toFixed(2)}
+                    </div>
+
+                `;
+
+                lista.appendChild(div);
+
+
+            });
+
+        }
+
+
+        document.getElementById("total").textContent =
+            "R$ " + total.toFixed(2);
+
+
+        document.getElementById("btn-finalizar").disabled =
+            itens.length === 0;
+
+
+        Object.keys(carrinho).forEach(id => {
+
+            const elemento =
+                document.getElementById("qtd-" + id);
+
+            if (elemento) {
+
+                elemento.textContent =
+                    carrinho[id].quantidade;
+
+            }
+
+        });
+
+
+        document
+            .querySelectorAll(".produto")
+            .forEach(produto => {
+
+                const id = produto.dataset.id;
+
+                const elemento =
+                    document.getElementById("qtd-" + id);
+
+                if (
+                    elemento &&
+                    !carrinho[id]
+                ) {
+
+                    elemento.textContent = "0";
+
+                }
+
+            });
+
+    }
+
+
+    async function finalizarVenda() {
+
+    const itens = Object.values(carrinho).map(item => ({
+        id: item.id,
+        quantidade: item.quantidade
+    }));
+
+    if (itens.length === 0) {
+
+        alert("O carrinho está vazio.");
+
+        return;
+    }
+
+        if (!formaPagamentoSelecionada) {
+
+    alert("Selecione uma forma de pagamento.");
+
+    return;
+}
+
+    const botao =
+        document.getElementById("btn-finalizar");
+
+    botao.disabled = true;
+
+    botao.textContent = "FINALIZANDO...";
+
+
+    try {
+
+        const resposta = await fetch(
+            "{{ url_for('finalizar_venda') }}",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    itens: itens,
+                    forma_pagamento: formaPagamentoSelecionada
+                })
+            }
+        );
+
+
+        const resultado =
+            await resposta.json();
+
+
+        if (!resposta.ok || !resultado.sucesso) {
+
+            alert(
+                resultado.erro ||
+                "Não foi possível finalizar a venda."
+            );
+
+            botao.disabled = false;
+
+            botao.textContent =
+                "✅ FINALIZAR VENDA";
+
+            return;
+        }
+
+
+        alert(
+            "Venda #" +
+            resultado.venda_id +
+            " realizada com sucesso!\n\n" +
+            "Total: R$ " +
+            Number(resultado.total)
+                .toFixed(2)
+                .replace(".", ",")
+        );
+
+
+        window.location.reload();
+
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert(
+            "Erro ao comunicar com o servidor."
+        );
+
+        botao.disabled = false;
+
+        botao.textContent =
+            "✅ FINALIZAR VENDA";
+    }
+
+}
+const campoPesquisa = document.getElementById("pesquisa");
+
+campoPesquisa.addEventListener("input", function () {
+
+    const texto = this.value.toLowerCase().trim();
+
+    document.querySelectorAll(".produto").forEach(function (produto) {
+
+        const nome = produto.dataset.nome.toLowerCase();
+
+        if (nome.includes(texto)) {
+            produto.style.display = "flex";
+        } else {
+            produto.style.display = "none";
+        }
+
+    });
+
+});
+let formaPagamentoSelecionada = null;
+
+document.querySelectorAll(".pagamento").forEach(function (botao) {
+
+    botao.addEventListener("click", function () {
+
+        document.querySelectorAll(".pagamento").forEach(function (item) {
+            item.classList.remove("selecionado");
+        });
+
+        this.classList.add("selecionado");
+
+        formaPagamentoSelecionada = this.dataset.forma;
+
+    });
+
+});
+</script>
+
+</body>
+</html>

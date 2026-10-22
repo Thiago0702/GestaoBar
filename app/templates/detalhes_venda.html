@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Detalhes da Venda - Gestão Bar</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            padding: 25px;
+        }
+
+        .topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .topo h1 {
+            margin: 0 0 5px;
+        }
+
+        .topo p {
+            margin: 0;
+            color: #777;
+        }
+
+        .botao {
+            text-decoration: none;
+            background: #222;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+
+        .informacoes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .info {
+            background: #f7f7f7;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info span {
+            display: block;
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 5px;
+        }
+
+        .info strong {
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f7f7f7;
+        }
+
+        .direita {
+            text-align: right;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 15px;
+            }
+
+            .topo {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .botao {
+                text-align: center;
+            }
+
+            .informacoes {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            th,
+            td {
+                padding: 10px 6px;
+                font-size: 14px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="topo">
+
+        <div>
+
+            <h1>
+                🧾 Venda #{{ venda.id }}
+            </h1>
+
+            <p>
+                Detalhes da venda realizada
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('historico_vendas') }}"
+            class="botao"
+        >
+            ← Histórico
+        </a>
+
+    </div>
+
+
+    <!-- INFORMAÇÕES DA VENDA -->
+
+    <div class="card">
+
+        <div class="informacoes">
+
+            <div class="info">
+
+                <span>DATA / HORA</span>
+
+                <strong>
+                    {{ venda.data_hora.strftime('%d/%m/%Y %H:%M') }}
+                </strong>
+
+            </div>
+
+
+            <div class="info">
+
+                <span>FUNCIONÁRIO</span>
+
+                <strong>
+                    {{ venda.usuario.nome }}
+                </strong>
+
+            </div>
+
+
+            <div class="info">
+
+                <span>NÚMERO DA VENDA</span>
+
+                <strong>
+                    #{{ venda.id }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUTOS -->
+
+    <div class="card">
+
+        <h2>🛒 Produtos vendidos</h2>
+
+        <br>
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Produto</th>
+
+                    <th>Quantidade</th>
+
+                    <th>Preço unitário</th>
+
+                    <th class="direita">
+                        Subtotal
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for item in venda.itens %}
+
+                <tr>
+
+                    <td>
+                        {{ item.mercadoria.nome }}
+                    </td>
+
+                    <td>
+                        {{ item.quantidade }}
+                    </td>
+
+                    <td>
+                        R$
+                        {{ "%.2f"|format(item.preco_unitario)|replace(".", ",") }}
+                    </td>
+
+                    <td class="direita">
+
+                        R$
+                        {{ "%.2f"|format(item.subtotal)|replace(".", ",") }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        <div class="total">
+
+            <span>
+                TOTAL DA VENDA
+            </span>
+
+            <span>
+                R$
+                {{ "%.2f"|format(venda.total)|replace(".", ",") }}
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

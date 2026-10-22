@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Buscar Produto - GestãoBar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .pesquisa {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .pesquisa input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .categoria {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .categoria-titulo {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            background: #222;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .categoria-produtos {
+            display: none;
+            padding: 10px 15px;
+        }
+
+        .categoria-produtos.aberto {
+            display: block;
+        }
+
+        .produto {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .produto:last-child {
+            border-bottom: none;
+        }
+
+        .produto-info strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .produto-info span {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .estoque-normal {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .estoque-baixo {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .sem-produtos {
+            text-align: center;
+            padding: 30px;
+            color: #777;
+            background: white;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .produto {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🔎 Buscar Produto</h1>
+</header>
+
+<div class="container">
+
+    <a href="{{ url_for('inicio') }}" class="voltar">
+        ← Voltar ao GestãoBar
+    </a>
+
+    <div class="pesquisa">
+        <input
+            type="text"
+            id="campo-pesquisa"
+            placeholder="Digite o nome do produto..."
+            onkeyup="pesquisarProduto()"
+        >
+    </div>
+
+    {% if produtos %}
+
+        {% set categorias = produtos | map(attribute='categoria') | unique | list %}
+
+        {% for categoria in categorias %}
+
+            <div class="categoria">
+
+                <button
+                    type="button"
+                    class="categoria-titulo"
+                    onclick="alternarCategoria(this)"
+                >
+                    📦 {{ categoria }}
+                    <span>＋</span>
+                </button>
+
+                <div class="categoria-produtos">
+
+                    {% for produto in produtos if produto.categoria == categoria %}
+
+                        <div
+                            class="produto"
+                            data-nome="{{ produto.nome|lower }}"
+                        >
+
+                            <div class="produto-info">
+                                <strong>{{ produto.nome }}</strong>
+
+                                <span>
+                                    Preço: R$
+                                    {{ "%.2f"|format(produto.preco_venda)|replace(".", ",") }}
+                                </span>
+                            </div>
+
+                            <div>
+
+                                {% if produto.quantidade <= produto.estoque_minimo %}
+
+                                    <span class="estoque-baixo">
+                                        ⚠️ Estoque: {{ produto.quantidade }}
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="estoque-normal">
+                                        🟢 Estoque: {{ produto.quantidade }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="sem-produtos">
+            Nenhum produto cadastrado.
+        </div>
+
+    {% endif %}
+
+</div>
+
+<script>
+
+function alternarCategoria(botao) {
+
+    const produtos = botao.nextElementSibling;
+    const simbolo = botao.querySelector("span");
+
+    produtos.classList.toggle("aberto");
+
+    if (produtos.classList.contains("aberto")) {
+        simbolo.textContent = "−";
+    } else {
+        simbolo.textContent = "＋";
+    }
+}
+
+
+function pesquisarProduto() {
+
+    const texto = document
+        .getElementById("campo-pesquisa")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const produtos = document.querySelectorAll(".produto");
+
+    produtos.forEach(function(produto) {
+
+        const nome = produto.dataset.nome;
+
+        if (nome.includes(texto)) {
+            produto.style.display = "flex";
+        } else {
+            produto.style.display = "none";
+        }
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

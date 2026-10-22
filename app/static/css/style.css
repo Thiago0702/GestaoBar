@@ -64,7 +64,19 @@ button {
 }
 
 .logo-icon {
-    font-size: 38px;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.logo-icon img {
+    width: 55px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .logo h2 {

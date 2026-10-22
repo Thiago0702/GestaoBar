@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pedidos | GestãoBar</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: #d4af37;
+            margin-bottom: 30px;
+        }
+
+        .pedido {
+            max-width: 600px;
+            margin: 0 auto 20px;
+            padding: 20px;
+            background: #1b1b1b;
+            border: 2px solid #d4af37;
+            border-radius: 12px;
+        }
+
+        .pedido h2 {
+            margin-top: 0;
+            color: #d4af37;
+        }
+
+        .pedido-info {
+            margin-bottom: 15px;
+            color: #ccc;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 2px solid #d4af37;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .vazio {
+            text-align: center;
+            color: #aaa;
+            margin-top: 50px;
+        }
+
+        .status-pedido {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 7px 14px;
+            background: #1e4f9a;
+            color: white;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .btn-preparo {
+            width: 100%;
+            margin-top: 18px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #e67e22;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-preparo:hover {
+            background: #f39c12;
+        }
+
+        .btn-pronto {
+            width: 100%;
+            margin-top: 10px;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #27ae60;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-pronto:hover {
+            background: #2ecc71;
+        }
+        .btn-entregue {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #16a085;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-entregue:hover {
+    background: #1abc9c;
+}
+.btn-voltar {
+    display: block;
+    max-width: 600px;
+    margin: 0 auto 20px;
+    padding: 12px;
+    background: #333;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.btn-voltar:hover {
+    background: #444;
+}
+    </style>
+</head>
+
+<body>
+    
+<a href="{{ url_for('inicio') }}" class="btn-voltar">
+    ← Voltar ao GestãoBar
+</a>
+
+    <h1>🛎️ Pedidos Recebidos</h1>
+
+    {% if vendas %}
+
+        {% for venda in vendas %}
+
+            <div class="pedido">
+                <small style="color: yellow;">
+                    STATUS TESTE: {{ venda.status }}
+                </small>
+
+                <h2>
+                    Pedido #{{ venda.id }}
+                </h2>
+
+                <div class="pedido-info">
+                    🪑 Mesa: {{ venda.mesa or "Não informada" }}
+                </div>
+
+                <div class="status-pedido">
+                    {% if venda.status == "recebido" %}
+                        🔵 Recebido
+                    {% elif venda.status == "em_preparo" %}
+                        🟠 Em preparo
+                    {% elif venda.status == "pronto" %}
+                        🟢 Pronto
+                    {% elif venda.status == "entregue" %}
+                        ✅ Entregue
+                    {% else %}
+                        ⚪ {{ venda.status }}
+                    {% endif %}
+                </div>
+
+                {% for item in venda.itens %}
+
+                    <div class="item">
+                        <span>
+                            {{ item.quantidade }}x {{ item.mercadoria.nome }}
+                        </span>
+
+                        <span>
+                            R$ {{ "%.2f"|format(item.subtotal)|replace(".", ",") }}
+                        </span>
+                    </div>
+
+                {% endfor %}
+
+                <div class="total">
+                    <span>Total</span>
+
+                    <span>
+                        R$ {{ "%.2f"|format(venda.total)|replace(".", ",") }}
+                    </span>
+                </div>
+
+                {% if venda.status == "recebido" %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('pedido_preparo', venda_id=venda.id) }}"
+                    >
+                        <button type="submit" class="btn-preparo">
+                            🔥 Mandar para preparo
+                        </button>
+                    </form>
+
+               {% elif venda.status == "em_preparo" %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('pedido_pronto', venda_id=venda.id) }}"
+                    >
+                        <button type="submit" class="btn-pronto">
+                            🟢 Marcar como pronto
+                        </button>
+                    </form>
+
+                {% elif venda.status == "pronto" %}
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('pedido_entregue', venda_id=venda.id) }}"
+                    >
+                        <button type="submit" class="btn-entregue">
+                            ✅ Entregar pedido
+                        </button>
+                    </form>
+
+                {% endif %}
+
+            </div> <!-- Fechamento da div .pedido -->
+
+        {% endfor %} <!-- Fechamento do loop de vendas -->
+
+    {% else %}
+
+        <div class="vazio">
+            Nenhum pedido recebido.
+        </div>
+
+    {% endif %}
+
+</body>
+</html>

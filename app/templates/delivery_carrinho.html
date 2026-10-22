@@ -1,0 +1,317 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho - Coelho Bar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            padding-bottom: 40px;
+            background: #f5f1eb;
+            color: #292020;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #450000;
+        }
+
+        .produto {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #00000012;
+        }
+
+        .informacoes {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .informacoes h3 {
+            margin: 0 0 8px;
+        }
+
+        .informacoes p {
+            margin: 4px 0;
+        }
+
+        .controles {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 16px;
+        }
+
+        .quantidade {
+            min-width: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .botao-quantidade {
+            background: #450000;
+            color: #fff;
+        }
+
+        .remover {
+            background: #eee;
+            color: #8b0000;
+        }
+
+        .resumo {
+            margin-top: 22px;
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+        }
+
+        .linha-total {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .acoes {
+            display: grid;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .botao-principal {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            border-radius: 10px;
+            background: #450000;
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        .botao-voltar {
+            background: #e8e1d8;
+            color: #450000;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 30px 10px;
+            background: white;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>🛒 Meu Carrinho</h1>
+
+        <div id="lista-produtos"></div>
+
+        <section class="resumo" id="resumo" hidden>
+            <div class="linha-total">
+                <span>Total dos produtos</span>
+                <span id="total">R$ 0,00</span>
+            </div>
+
+            <p>Taxa de entrega: a confirmar no próximo passo.</p>
+
+            <div class="acoes">
+                
+                <a href="{{ url_for('delivery_finalizar') }}"
+                    id="continuar"
+                    class="botao-principal">
+                        Continuar pedido
+                </a>
+
+
+                <a href="{{ url_for('delivery_cardapio') }}"
+                   class="botao-principal botao-voltar">
+                    Voltar ao cardápio
+                </a>
+            </div>
+        </section>
+
+        <div id="carrinho-vazio" class="vazio" hidden>
+            <p>Seu carrinho está vazio.</p>
+            <a href="{{ url_for('delivery_cardapio') }}"
+               class="botao-principal">
+                Ver cardápio
+            </a>
+        </div>
+    </main>
+
+    <script>
+        function obterCarrinho() {
+            try {
+                return JSON.parse(
+                    localStorage.getItem("delivery_carrinho") || "[]"
+                );
+            } catch (erro) {
+                return [];
+            }
+        }
+
+        function salvarCarrinho(carrinho) {
+            localStorage.setItem(
+                "delivery_carrinho",
+                JSON.stringify(carrinho)
+            );
+        }
+
+        function formatarMoeda(valor) {
+            return Number(valor).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function alterarQuantidade(id, alteracao) {
+            const carrinho = obterCarrinho();
+            const produto = carrinho.find(item => item.id === id);
+
+            if (!produto) return;
+
+            produto.quantidade += alteracao;
+
+            const atualizado = carrinho.filter(
+                item => item.quantidade > 0
+            );
+
+            salvarCarrinho(atualizado);
+            renderizarCarrinho();
+        }
+
+        function removerProduto(id) {
+            const carrinho = obterCarrinho().filter(
+                item => item.id !== id
+            );
+
+            salvarCarrinho(carrinho);
+            renderizarCarrinho();
+        }
+
+        function renderizarCarrinho() {
+            const carrinho = obterCarrinho();
+            const lista = document.getElementById("lista-produtos");
+            const resumo = document.getElementById("resumo");
+            const vazio = document.getElementById("carrinho-vazio");
+
+            lista.replaceChildren();
+
+            if (carrinho.length === 0) {
+                resumo.hidden = true;
+                vazio.hidden = false;
+                return;
+            }
+
+            vazio.hidden = true;
+            resumo.hidden = false;
+
+            let total = 0;
+
+            carrinho.forEach(produto => {
+                const quantidade = Math.max(
+                    0, Number(produto.quantidade) || 0
+                );
+                const preco = Math.max(0, Number(produto.preco) || 0);
+                const subtotal = quantidade * preco;
+
+                total += subtotal;
+
+                const card = document.createElement("article");
+                card.className = "produto";
+
+                const informacoes = document.createElement("div");
+                informacoes.className = "informacoes";
+
+                const nome = document.createElement("h3");
+                nome.textContent = produto.nome;
+
+                const precoTexto = document.createElement("p");
+                precoTexto.textContent =
+                    "Unitário: " + formatarMoeda(preco);
+
+                const subtotalTexto = document.createElement("p");
+                subtotalTexto.textContent =
+                    "Subtotal: " + formatarMoeda(subtotal);
+
+                informacoes.append(nome, precoTexto, subtotalTexto);
+
+                const controles = document.createElement("div");
+                controles.className = "controles";
+
+                const menos = document.createElement("button");
+                menos.className = "botao-quantidade";
+                menos.textContent = "−";
+                menos.setAttribute("aria-label", "Diminuir quantidade");
+                menos.addEventListener("click", () =>
+                    alterarQuantidade(produto.id, -1)
+                );
+
+                const numero = document.createElement("span");
+                numero.className = "quantidade";
+                numero.textContent = quantidade;
+
+                const mais = document.createElement("button");
+                mais.className = "botao-quantidade";
+                mais.textContent = "+";
+                mais.setAttribute("aria-label", "Aumentar quantidade");
+                mais.addEventListener("click", () =>
+                    alterarQuantidade(produto.id, 1)
+                );
+
+                const remover = document.createElement("button");
+                remover.className = "remover";
+                remover.textContent = "Remover";
+                remover.addEventListener("click", () =>
+                    removerProduto(produto.id)
+                );
+
+                controles.append(menos, numero, mais, remover);
+                card.append(informacoes, controles);
+                lista.appendChild(card);
+            });
+
+            document.getElementById("total").textContent =
+                formatarMoeda(total);
+        }
+
+        document.addEventListener("DOMContentLoaded", renderizarCarrinho);
+    </script>
+</body>
+</html>
+
+

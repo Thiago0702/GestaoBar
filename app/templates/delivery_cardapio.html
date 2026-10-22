@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Delivery | Coelho Bar e Hamburgueria</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top,
+                    #7d0909 0%,
+                    #360000 45%,
+                    #120000 100%
+                );
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           TOPO
+        ========================= */
+
+        .topo {
+            text-align: center;
+            padding: 35px 20px 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-area {
+            animation: entradaLogo 1.4s ease-out;
+        }
+
+        .logo {
+            width: 230px;
+            max-width: 75%;
+            border-radius: 50%;
+            box-shadow:
+                0 0 15px rgba(212, 175, 55, 0.5),
+                0 0 35px rgba(212, 175, 55, 0.25);
+            animation: brilhoLogo 3s ease-in-out infinite;
+        }
+
+        /* =========================
+           FRASE
+        ========================= */
+
+        .titulo {
+            text-align: center;
+            padding: 10px 20px 30px;
+            animation: entradaTexto 1.5s ease-out;
+        }
+
+        .titulo h1 {
+            margin: 0;
+            color: #d4af37;
+            font-size: clamp(30px, 7vw, 52px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .titulo p {
+            margin: 12px 0 0;
+            color: #fff;
+            font-size: clamp(17px, 4vw, 23px);
+        }
+
+        .linha-dourada {
+            width: 180px;
+            height: 3px;
+            background: #d4af37;
+            margin: 20px auto 0;
+            border-radius: 10px;
+            box-shadow: 0 0 12px #d4af37;
+        }
+
+        /* =========================
+           CONTEÚDO
+        ========================= */
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: auto;
+            padding: 0 18px 40px;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #d4af37;
+            font-size: 24px;
+            margin: 10px 0 22px;
+        }
+
+        /* =========================
+           CATEGORIAS
+        ========================= */
+
+        .categorias {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .categoria {
+            position: relative;
+            min-height: 220px;
+            display: block;
+            color: inherit;
+            text-decoration: none;
+            border: 1px solid #d4af37;
+            border-radius: 18px;
+            overflow: hidden;
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #9b0000,
+                    #450000
+                );
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.4);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .categoria:hover {
+            transform: translateY(-7px) scale(1.02);
+
+            box-shadow:
+                0 12px 30px rgba(0, 0, 0, 0.55),
+                0 0 18px rgba(212, 175, 55, 0.35);
+        }
+
+        .categoria:active {
+            transform: scale(0.97);
+        }
+
+        .categoria-conteudo {
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .icone {
+            font-size: 70px;
+            margin-bottom: 15px;
+
+            filter:
+                drop-shadow(
+                    0 5px 8px rgba(0, 0, 0, 0.5)
+                );
+
+            animation:
+                flutuar 3s ease-in-out infinite;
+        }
+
+        .categoria:nth-child(2) .icone {
+            animation-delay: 0.2s;
+        }
+
+        .categoria:nth-child(3) .icone {
+            animation-delay: 0.4s;
+        }
+
+        .categoria:nth-child(4) .icone {
+            animation-delay: 0.6s;
+        }
+
+        .categoria:nth-child(5) .icone {
+            animation-delay: 0.8s;
+        }
+
+        .categoria h2 {
+            margin: 0;
+            color: #d4af37;
+            font-size: 21px;
+            text-transform: uppercase;
+        }
+
+        .categoria span {
+            margin-top: 8px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .seta {
+            margin-top: 12px;
+            color: #d4af37;
+            font-size: 25px;
+        }
+
+        /* =========================
+           ANIMAÇÕES
+        ========================= */
+
+        @keyframes entradaLogo {
+
+            from {
+                opacity: 0;
+                transform: scale(0.6) rotate(-8deg);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) rotate(0);
+            }
+
+        }
+
+        @keyframes brilhoLogo {
+
+            0%,
+            100% {
+                box-shadow:
+                    0 0 15px rgba(212, 175, 55, 0.5),
+                    0 0 35px rgba(212, 175, 55, 0.2);
+            }
+
+            50% {
+                box-shadow:
+                    0 0 25px rgba(212, 175, 55, 0.8),
+                    0 0 55px rgba(212, 175, 55, 0.4);
+            }
+
+        }
+
+        @keyframes entradaTexto {
+
+            from {
+                opacity: 0;
+                transform: translateY(25px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes flutuar {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-7px);
+            }
+
+        }
+
+        /* =========================
+           CELULAR
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            .topo {
+                padding-top: 25px;
+            }
+
+            .logo {
+                width: 190px;
+            }
+
+            .titulo {
+                padding-bottom: 25px;
+            }
+
+            .categorias {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .categoria {
+                min-height: 185px;
+            }
+
+            .categoria-conteudo {
+                min-height: 185px;
+                padding: 12px;
+            }
+
+            .icone {
+                font-size: 52px;
+                margin-bottom: 10px;
+            }
+
+            .categoria h2 {
+                font-size: 16px;
+            }
+
+            .categoria span {
+                font-size: 12px;
+            }
+
+        }
+
+        @media (max-width: 380px) {
+
+            .categorias {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header class="topo">
+
+        <div class="logo-area">
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='img/logo_coelho_bar.jpg'
+                ) }}"
+                alt="Coelho Bar e Hamburgueria"
+                class="logo"
+            >
+
+        </div>
+
+    </header>
+
+
+    <section class="titulo">
+
+        <h1>
+            Seu pedido começa aqui
+        </h1>
+
+        <p>
+            O sabor fica por nossa conta.
+        </p>
+
+        <div class="linha-dourada"></div>
+
+    </section>
+
+
+    <main class="container">
+
+        <h2 class="subtitulo">
+            🍽️ Escolha uma categoria
+        </h2>
+
+
+        {% if not categoria %}
+
+        <div class="categorias">
+
+            
+<a href="{{ url_for('delivery_cardapio', categoria='Hambúrgueres') }}" class="categoria">
+        <div class="categoria-conteudo">
+        <div class="icone">
+            🍔
+        </div>
+        <h2>Hambúrgueres</h2>
+        <span>Confira nossos burgers</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+
+   
+<a href="{{ url_for('delivery_cardapio', categoria='Lanches') }}" class="categoria">
+    <div class="categoria-conteudo">
+        <div class="icone">🥪</div>
+        <h2>Lanches</h2>
+        <span>Opções para matar a fome</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+
+
+ 
+<a href="{{ url_for('delivery_cardapio', categoria='Porções') }}" class="categoria">
+    <div class="categoria-conteudo">
+        <div class="icone">🍟</div>
+        <h2>Porções</h2>
+        <span>Para compartilhar</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+
+
+        
+<a href="{{ url_for('delivery_cardapio', categoria='Refrigerantes') }}" class="categoria">
+    <div class="categoria-conteudo">
+        <div class="icone">🥤</div>
+        <h2>Refrigerantes</h2>
+        <span>Bebidas geladas</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+
+<a href="{{ url_for('delivery_cardapio', categoria='Cervejas Lata') }}" class="categoria">
+    <div class="categoria-conteudo">
+        <div class="icone">🍺</div>
+        <h2>Cervejas Lata</h2>
+        <span>Para acompanhar</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+             
+<a href="{{ url_for('delivery_cardapio', categoria='Sucos') }}" class="categoria">
+    <div class="categoria-conteudo">
+        <div class="icone">🍹</div>
+        <h2>Sucos</h2>
+        <span>Sucos naturais e especiais</span>
+        <div class="seta">›</div>
+    </div>
+</a>
+        </div>
+        
+
+    {% endif %}
+
+    {% if categoria %}
+
+    <a
+        href="/delivery/cardapio"
+        style="
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            background: #450000;
+            border: 1px solid #d4af37;
+            border-radius: 10px;
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: bold;
+            "
+        >
+            ← Voltar para categorias
+    </a>
+
+<div style="
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 18px;
+">
+
+    <h2 style="
+        text-align: center;
+        color: #d4af37;
+        text-transform: uppercase;
+        margin-bottom: 25px;
+    ">
+        {{ categoria }}
+    </h2>
+
+    {% if produtos %}
+
+              <div style="
+                    background: linear-gradient(145deg, #9b0000, #450000);
+                    border: 1px solid #d4af37;
+                    border-radius: 15px;
+                    padding: 18px;
+                    margin-bottom: 15px;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                    gap: 25px;
+                    width: 100%;
+                    box-sizing: border-box;
+                "> 
+
+        
+
+            {% for produto in produtos %}
+
+    <div style="
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    ">
+
+        <div>
+            <h3 style="
+                margin: 0 0 6px 0;
+                color: #450000;
+            ">
+                {{ produto.nome }}
+            </h3>
+
+            <p style="
+                margin: 0;
+                font-weight: bold;
+                color: #b8860b;
+            ">
+                R$ {{ "%.2f"|format(produto.preco_delivery)|replace(".", ",") }}
+            </p>
+        </div>
+
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        ">
+
+            <button
+                type="button"
+                onclick="alterarQuantidade(
+                    {{ produto.id }},
+                    '{{ produto.nome|replace("'", "\\'") }}',
+                    {{ produto.preco_delivery }},
+                    -1
+                )"
+                style="
+                    width: 38px;
+                    height: 38px;
+                    border: none;
+                    border-radius: 8px;
+                    background: #450000;
+                    color: white;
+                    font-size: 22px;
+                    font-weight: bold;
+                    cursor: pointer;
+                "
+            >
+                −
+            </button>
+
+            <span
+                id="quantidade-{{ produto.id }}"
+                style="
+                    min-width: 25px;
+                    text-align: center;
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #450000;
+                "
+            >
+                0
+            </span>
+
+            <button
+                type="button"
+                onclick="alterarQuantidade(
+                    {{ produto.id }},
+                    '{{ produto.nome|replace("'", "\\'") }}',
+                    {{ produto.preco_delivery }},
+                    1
+                )"
+                style="
+                    width: 38px;
+                    height: 38px;
+                    border: none;
+                    border-radius: 8px;
+                    background: #450000;
+                    color: #d4af37;
+                    font-size: 22px;
+                    font-weight: bold;
+                    cursor: pointer;
+                "
+            >
+                +
+            </button>
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+    {% else %}
+
+        <p style="
+            text-align: center;
+            color: white;
+        ">
+            Nenhum produto encontrado nesta categoria.
+        </p>
+
+    {% endif %}
+
+<script>
+
+function alterarQuantidade(id, nome, preco, alteracao) {
+
+    let carrinho = JSON.parse(
+        localStorage.getItem("delivery_carrinho") || "[]"
+    );
+
+    let produtoExistente = carrinho.find(
+        item => item.id === id
+    );
+
+    if (!produtoExistente && alteracao > 0) {
+
+        produtoExistente = {
+            id: id,
+            nome: nome,
+            preco: preco,
+            quantidade: 0
+        };
+
+        carrinho.push(produtoExistente);
+    }
+
+    if (produtoExistente) {
+
+        produtoExistente.quantidade += alteracao;
+
+        if (produtoExistente.quantidade <= 0) {
+
+            carrinho = carrinho.filter(
+                item => item.id !== id
+            );
+
+            produtoExistente = null;
+        }
+    }
+
+
+
+    localStorage.setItem(
+        "delivery_carrinho",
+        JSON.stringify(carrinho)
+    );
+
+    atualizarQuantidadeProduto(id);
+
+    if (typeof atualizarTotalItensCarrinho === "function") {
+        atualizarTotalItensCarrinho();
+    }
+}
+
+
+function atualizarQuantidadeProduto(id) {
+
+    let carrinho = JSON.parse(
+        localStorage.getItem("delivery_carrinho") || "[]"
+    );
+
+    let produto = carrinho.find(
+        item => item.id === id
+    );
+
+    let quantidade = produto
+        ? produto.quantidade
+        : 0;
+
+    const elemento = document.getElementById(
+        "quantidade-" + id
+    );
+
+    if (elemento) {
+        elemento.textContent = quantidade;
+    }
+}
+
+
+function carregarQuantidades() {
+
+    let carrinho = JSON.parse(
+        localStorage.getItem("delivery_carrinho") || "[]"
+    );
+
+    carrinho.forEach(item => {
+
+        const elemento = document.getElementById(
+            "quantidade-" + item.id
+        );
+
+        if (elemento) {
+            elemento.textContent = item.quantidade;
+        }
+
+    });
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    carregarQuantidades
+);
+
+</script>
+
+</div>
+
+{% endif %}
+
+```html
+<a href="{{ url_for('delivery_carrinho') }}"
+   class="botao-carrinho"
+   aria-label="Abrir carrinho"
+   title="Abrir carrinho">
+    🛒
+    <span id="total-itens-carrinho">0</span>
+</a>
+
+<style>
+.botao-carrinho {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 1000;
+
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #450000;
+    color: #d4af37;
+    border: 2px solid #d4af37;
+    border-radius: 50%;
+
+    font-size: 25px;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+
+#total-itens-carrinho {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+
+    min-width: 21px;
+    height: 21px;
+    padding: 2px 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #d4af37;
+    color: #450000;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.botao-carrinho:hover {
+    transform: scale(1.06);
+}
+</style>
+
+
+<script>
+function atualizarTotalItensCarrinho() {
+    const carrinho = JSON.parse(
+        localStorage.getItem("delivery_carrinho") || "[]"
+    );
+
+    const total = carrinho.reduce(
+        (soma, item) => soma + Number(item.quantidade || 0),
+        0
+    );
+
+    document.getElementById("total-itens-carrinho").textContent = total;
+}
+
+document.addEventListener(
+    "DOMContentLoaded",
+    atualizarTotalItensCarrinho
+);
+</script>
+
+</body>
+
+</html>

@@ -20,13 +20,18 @@
         <aside class="sidebar">
 
             <div class="logo">
-                <div class="logo-icon">🍺</div>
+    <div class="logo-icon">
+        <img
+            src="{{ url_for('static', filename='img/logo_coelho_bar.jpg') }}"
+            alt="Coelho Bar e Hamburgueria"
+        >
+    </div>
 
-                <div>
-                    <h2>BAR DO THIAGO</h2>
-                    <span>Gestão de Vendas</span>
-                </div>
-            </div>
+    <div>
+        <h2>Coelho Bar e Hamburgueria</h2>
+        <span>Gestão de Vendas</span>
+    </div>
+</div>
 
             <nav class="menu">
 
@@ -35,22 +40,27 @@
                     Dashboard
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="{{ url_for('vendas') }}" class="menu-item">
                     <span>🛒</span>
                     Vendas
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="{{ url_for('pedidos') }}" class="menu-item">
+                    <span>🛎️</span>
+                    Pedidos de Mesa
+                </a>
+
+                <a href="{{ url_for('mercadorias') }}" class="menu-item">
                     <span>📦</span>
                     Estoque
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="{{ url_for('mercadorias') }}" class="menu-item">
                     <span>🍔</span>
                     Produtos
                 </a>
 
-                <a href="#" class="menu-item">
+                <a href="{{ url_for('fechamento', data=data_selecionada) }}" class="menu-item">
                     <span>📊</span>
                     Relatórios
                 </a>
@@ -77,9 +87,11 @@
                 </div>
 
                 <div class="topbar-actions">
-                    <button class="notification">
-                        🔔
-                        <span>3</span>
+                    <button class="notification" onclick="window.location.href='{{ url_for('pedidos') }}'">
+                            🔔
+                        {% if pedidos_novos > 0 %}
+                    <span>{{ pedidos_novos }}</span>
+                        {% endif %}
                     </button>
                 </div>
 
@@ -90,18 +102,35 @@
             <section class="welcome">
 
                 <div>
-                    <h1>Bom dia, Thiago! 👋</h1>
-                    <p>Aqui está o resumo do seu bar hoje.</p>
+                    <h1>Bom dia! 👋</h1>
+
+                    <p>
+                        Aqui está o resumo do seu bar em {{ data_consulta }}.
+                    </p>
+
                 </div>
 
                 <div class="date-card">
-                    📅
+                   <label
+                        for="calendario"
+                        style="cursor: pointer;"
+                        onclick="abrirCalendario()"
+                    >
+                        📅
+                    </label>
+
                     <div>
-                        <strong id="current-date">--/--/----</strong>
-                        <span id="current-day">---</span>
-                    </div>
+                    <strong id="current-date">{{ data_consulta }}</strong>
+                    <span id="current-day">{{ dia_consulta }}</span>
                 </div>
 
+                <input
+                    type="date"
+                    id="calendario"
+                    onchange="selecionarData()"
+                    style="position: absolute; opacity: 0; width: 1px; height: 1px;"
+                >
+                </div>
             </section>
 
 
@@ -114,10 +143,12 @@
 
                     <div>
                         <span class="stat-title">
-                            FATURAMENTO HOJE
+                            FATURAMENTO DO DIA
                         </span>
 
-                        <strong>R$ 0,00</strong>
+                        <strong>
+                            R$ {{ "%.2f"|format(faturamento_hoje)|replace(".", ",") }}
+                        </strong>
 
                         <small>
                             Sem vendas registradas
@@ -133,10 +164,10 @@
 
                     <div>
                         <span class="stat-title">
-                            VENDAS HOJE
+                            VENDAS DO DIA
                         </span>
 
-                        <strong>0</strong>
+                        <strong>{{ quantidade_vendas }}</strong>
 
                         <small>
                             vendas realizadas
@@ -155,7 +186,9 @@
                             TICKET MÉDIO
                         </span>
 
-                        <strong>R$ 0,00</strong>
+                        <strong>
+                           R$ {{ "%.2f"|format(ticket_medio)|replace(".", ",") }}
+                        </strong>
 
                         <small>
                             por venda
@@ -174,7 +207,9 @@
                             LUCRO ESTIMADO
                         </span>
 
-                        <strong>R$ 0,00</strong>
+                        <strong>
+                            R$ {{ "%.2f"|format(lucro_estimado)|replace(".", ",") }}
+                        </strong>
 
                         <small>
                             aguardando vendas
@@ -190,13 +225,15 @@
 
                     <div>
                         <span class="stat-title">
-                            PERDAS HOJE
+                            PERDAS DO DIA
                         </span>
 
-                        <strong>R$ 0,00</strong>
+                        <strong>
+                            R$ {{ "%.2f"|format(perdas_hoje)|replace(".", ",") }}
+                        </strong>
 
                         <small>
-                            nenhuma perda registrada
+                            perdas registradas hoje
                         </small>
                     </div>
 
@@ -212,7 +249,7 @@
                             PRODUTOS
                         </span>
 
-                        <strong>0</strong>
+                        <strong>{{ quantidade_produtos }}</strong>
 
                         <small>
                             produtos cadastrados
@@ -234,26 +271,89 @@
                         <p>Produtos que precisam de atenção</p>
                     </div>
 
-                    <button class="link-button">
+                    <a href="{{ url_for('mercadorias') }}" class="link-button">
                         Ver todos →
-                    </button>
+                    </a>
 
                 </div>
 
-                <div class="empty-state">
 
-                    <div class="empty-icon">📦</div>
-
-                    <h3>Nenhum produto cadastrado</h3>
-
-                    <p>
-                        Quando começarmos a cadastrar os produtos,
-                        os itens com estoque baixo aparecerão aqui.
-                    </p>
-
-                </div>
 
             </section>
+                            {% if produtos_estoque_baixo %}
+
+                    <div class="estoque-baixo-lista">
+
+                        {% for produto in produtos_estoque_baixo %}
+
+                            <div class="produto-estoque-baixo">
+
+                                <div>
+                                    <strong>{{ produto.nome }}</strong>
+
+                                    <small>
+                                        Estoque atual: {{ produto.quantidade }}
+                                        | Mínimo: {{ produto.estoque_minimo }}
+                                    </small>
+                                </div>
+
+                                <span class="estoque-alerta">
+                                    ⚠️ Baixo
+                                </span>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                   {% if produtos_estoque_baixo %}
+
+    <div class="estoque-baixo-lista">
+
+        {% for produto in produtos_estoque_baixo %}
+
+            <div class="produto-estoque-baixo">
+
+                <div>
+                    <strong>{{ produto.nome }}</strong>
+
+                    <small>
+                        Estoque atual: {{ produto.quantidade }}
+                        | Mínimo: {{ produto.estoque_minimo }}
+                    </small>
+                </div>
+
+                <span class="estoque-alerta">
+                    ⚠️ Baixo
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <div class="empty-state">
+
+        <div class="empty-icon">📦</div>
+
+        <h3>Nenhum produto com estoque baixo</h3>
+
+        <p>
+            Os produtos que atingirem o estoque mínimo
+            aparecerão aqui.
+        </p>
+
+    </div>
+
+{% endif %}
+
+                {% endif %}
 
 
             <!-- AÇÕES RÁPIDAS -->
@@ -268,29 +368,34 @@
 
                 <div class="quick-actions">
 
-                    <button class="action-button green-button">
+                    <a
+                        href="{{ url_for('vendas') }}"
+                        class="action-button green-button"
+                    >
                         <span>🛒</span>
                         <strong>Nova Venda</strong>
-                    </button>
+                    </a>
 
-                    <button class="action-button blue-button">
-                        <span>➕</span>
-                        <strong>Nova Entrada</strong>
-                    </button>
+                    <a href="{{ url_for('pedidos_delivery') }}" class="action-button blue-button">
+                        <span>🚚</span>
+                        <strong>Delivery</strong>
+                    </a>
 
-                    <button class="action-button orange-button">
+                    <a href="{{ url_for('registrar_perda') }}" class="action-button orange-button">
                         <span>🗑️</span>
                         <strong>Registrar Perda</strong>
-                    </button>
+                    </a>
 
-                    <button class="action-button purple-button">
+
+                   <a href="{{ url_for('buscar_produto') }}" class="action-button purple-button">
                         <span>🔎</span>
                         <strong>Buscar Produto</strong>
-                    </button>
+                    </a>
 
                 </div>
 
             </section>
+
 
 
             <!-- RODAPÉ -->
@@ -319,19 +424,19 @@
             <small>Início</small>
         </a>
 
-        <a href="#">
+        <a href="{{ url_for('vendas') }}">
             <span>🛒</span>
             <small>Vendas</small>
         </a>
 
-        <a href="#">
+        <a href="{{ url_for('mercadorias') }}">
             <span>📦</span>
             <small>Estoque</small>
         </a>
 
-        <a href="#">
+         <a href="{{ url_for('historico_perdas') }}">
             <span>📊</span>
-            <small>Relatórios</small>
+            <small>Histórico de Perdas</small>
         </a>
 
         <a href="#">

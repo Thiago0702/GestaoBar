@@ -17,6 +17,25 @@ function atualizarData() {
     if (diaElemento) {
         diaElemento.textContent =
             dia.charAt(0).toUpperCase() + dia.slice(1);
+    }
 }
 
-atualizarData();
+
+function abrirCalendario() {
+    const calendario = document.getElementById("calendario");
+
+    if (calendario) {
+        calendario.showPicker();
+    }
+}
+
+
+function selecionarData() {
+    const calendario = document.getElementById("calendario");
+
+    if (!calendario || !calendario.value) {
+        return;
+    }
+
+    window.location.href = "/?data=" + calendario.value;
+}

@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cardápio | Coelho Bar e Hamburgueria</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 15px;
+            background: linear-gradient(135deg, #000, #651018);
+            border-bottom: 3px solid #d4af37;
+        }
+
+        header h1 {
+            color: #d4af37;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #eee;
+            margin: 6px 0;
+        }
+
+        .informacoes {
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .whatsapp {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #25d366;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .introducao {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .introducao h2 {
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .categorias-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            align-items: start;
+        }
+
+        .categoria {
+            margin-bottom: 0;
+            border: 1px solid #8d2029;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1b1b1b;
+        }   
+
+        .categoria-titulo {
+            width: 100%;
+            border: none;
+            padding: 18px;
+            background: #9d1825;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .categoria-titulo:hover {
+            background: #c32131;
+        }
+
+        .produtos {
+            display: none;
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(240px, 1fr)
+            );
+            gap: 15px;
+            padding: 15px;
+        }
+
+        .produtos.aberto {
+            display: grid;
+        }
+
+        .produto {
+            background: #292929;
+            border: 1px solid #444;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+
+        .produto:hover {
+            transform: translateY(-3px);
+            border-color: #d4af37;
+        }
+
+        .imagem-produto {
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #222, #3a1115);
+            font-size: 65px;
+        }
+
+        .produto-conteudo {
+            padding: 15px;
+        }
+
+        .produto h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .preco {
+            color: #d4af37;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .indisponivel {
+            color: #ff5c5c;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 40px 15px;
+            background: #222;
+            border-radius: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: #aaa;
+            font-size: 13px;
+            border-top: 1px solid #333;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 23px;
+            }
+
+            .categoria-titulo {
+                font-size: 16px;
+            }
+        }
+        .logo-cardapio {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #d4af37;
+    margin-bottom: 15px;
+}
+        .imagem-produto img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    display: block;
+}
+    .categoria-conteudo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+}
+
+    .categoria-conteudo img {
+        width: 65px;
+        height: 65px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 2px solid #d4af37;
+        flex-shrink: 0;
+
+}
+    .mesa-identificacao {
+    text-align: center;
+    background: #d4af37;
+    color: #111;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin: 15px auto 20px;
+    border-radius: 10px;
+    max-width: 250px;
+}
+.btn-carrinho {
+    display: block;
+    width: 90%;
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 15px;
+    background: #d4af37;
+    color: #111;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#contador-carrinho {
+    background: #111;
+    color: #d4af37;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-left: 5px;
+}
+.carrinho-painel {
+    display: none;
+    width: 94%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #1b1b1b;
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+}
+
+.carrinho-painel.aberto {
+    display: block;
+}
+
+.carrinho-painel h2 {
+    color: #d4af37;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.item-carrinho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0;
+    border-bottom: 1px solid #444;
+}
+
+.item-carrinho-info {
+    flex: 1;
+}
+
+.item-carrinho-info strong {
+    display: block;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.item-carrinho-info span {
+    color: #d4af37;
+    font-size: 14px;
+}
+
+.controles-carrinho {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.controles-carrinho button {
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 7px;
+    background: #9d1825;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.controles-carrinho button:hover {
+    background: #c32131;
+}
+
+.quantidade-carrinho {
+    min-width: 24px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.subtotal-carrinho {
+    min-width: 85px;
+    text-align: right;
+    color: #d4af37;
+    font-weight: bold;
+}
+
+.carrinho-vazio {
+    text-align: center;
+    color: #aaa;
+    padding: 20px;
+}
+
+.carrinho-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 2px solid #d4af37;
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.btn-enviar-pedido {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #25d366;
+    color: white;
+    border: none;
+    border-radius: 9px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+    </style>
+</head>
+
+<body>
+
+    <header>
+    <img
+        src="{{ url_for('static', filename='img/logo_coelho_bar.jpg') }}"
+        alt="Coelho Bar e Hamburgueria"
+        class="logo-cardapio"
+    >
+
+    <h1>Coelho Bar e Hamburgueria</h1>
+
+    <p>🍻 Sabor, qualidade e bons momentos!</p>
+
+    <div class="informacoes">
+        📍 Rua Pedro Klein do Nascimento, nº 23<br>
+        🕒 Funcionamento: 07:00 às 22:00<br>
+        📞 (11) 99769-5725
+    </div>
+
+    <a
+        class="whatsapp"
+        href="https://wa.me/5511997695725"
+        target="_blank"
+    >
+        📲 Pedir pelo WhatsApp
+    </a>
+</header>
+
+    <main class="container">
+
+        
+{% if mesa is defined and mesa %}
+    <div class="mesa-identificacao">
+        🪑 Mesa {{ mesa }}
+    </div>
+    {% else %}
+        <div class="mesa-identificacao">
+        <label for="numero-mesa">🪑 Informe sua mesa:</label>
+        <input
+            type="number"
+            id="numero-mesa"
+            min="1"
+            step="1"
+            placeholder="Número da mesa"
+            required
+        >
+        </div>
+    {% endif %}
+
+
+        <div class="introducao">
+            <h2>📖 Nosso Cardápio</h2>
+            <p>Toque em uma categoria para visualizar os produtos.</p>
+        </div>
+
+        {% if produtos %}
+
+            {% set categoria_atual = namespace(nome="") %}
+
+            <div class="categorias-container">
+
+            {% for produto in produtos %}
+
+            {% if produto.categoria != categoria_atual.nome %}
+
+                    {% if categoria_atual.nome != "" %}
+                            </div>
+                        </section>
+                    {% endif %}
+
+                    {% set categoria_atual.nome = produto.categoria %}
+
+                    <section class="categoria">
+
+                     <button
+    class="categoria-titulo"
+    onclick="alternarCategoria(this)"
+>
+    <span class="categoria-conteudo">
+
+        {% set categoria = produto.categoria|lower|trim %}
+
+        {% if 'cerveja' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/cervejas1.jpeg') }}"
+                alt="Cervejas"
+            >
+
+        {% elif 'cerveja - artesanal' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/cervejaartesanal.jpg') }}"
+                alt="Cervejas Artesanais"
+            >
+
+
+        {% elif 'bebida - dose'in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/bebidadose1.avif') }}"
+                alt="Bebida-Dose"
+            >
+
+        {% elif categoria == 'bebidas' or categoria == 'refrigerantes' %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/bebidas1.jpeg') }}"
+                alt="Bebidas"
+            >
+
+        {% elif 'drink' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/drinks1.jpeg') }}"
+                alt="Drinks"
+            >
+
+        {% elif 'beirute' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/beirutes1.avif') }}"
+                alt="Beirutes"
+            >
+
+        {% elif 'lanche' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/lanches1.jpg') }}"
+                alt="Lanches"
+            >
+
+                {% elif 'hamb' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/hamburguers1.jpeg') }}"
+                alt="Hambúrgueres"
+            >
+
+                {% elif 'porções' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/porcoes1.jpeg') }}"
+                alt="Porções"
+            >
+
+        {% elif 'suco' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/sucos1.jpg') }}"
+                alt="Sucos"
+            >
+
+        {% elif 'água' in categoria or 'agua' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/aguas1.webp') }}"
+                alt="Águas"
+            >
+
+        {% elif 'sobremesa' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/sobremesa1.avif') }}"
+                alt="Sobremesas"
+            >
+
+        {% elif 'vinho' in categoria %}
+            <img
+                src="{{ url_for('static', filename='img_produtos/vinhos1.jpeg') }}"
+                alt="Vinhos"
+            >
+
+        {% else %}
+            🍽️
+        {% endif %}
+
+        {{ produto.categoria }}
+
+    </span>
+
+    <span>＋</span>
+</button>
+
+<div class="produtos">
+
+                {% endif %}
+
+                    <article class="produto">
+
+                       
+<div class="imagem-produto">
+
+    {% if 'artesanal' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/cervejaartesanal.jpg') }}"
+            alt="Cervejas Artesanais"
+        >
+
+    {% elif 'cerveja' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/cervejas1.jpeg') }}"
+            alt="Cervejas"
+        >
+
+    {% elif 'bebida' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/bebidas1.jpeg') }}"
+            alt="Bebidas"
+        >
+
+    {% elif 'drink' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/drinks1.jpeg') }}"
+            alt="Drinks"
+        >
+
+    {% elif 'lanche' in produto.categoria|lower or 'hamburg' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/hamburguers1.jpeg') }}"
+            alt="Hambúrgueres"
+        >
+
+    {% elif 'porção' in produto.categoria|lower or 'porcoes' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/porcoes1.jpeg') }}"
+            alt="Porções"
+        >
+
+    {% elif 'vinho' in produto.categoria|lower %}
+        <img
+            src="{{ url_for('static', filename='img_produtos/vinhos1.jpeg') }}"
+            alt="Vinhos"
+        >
+
+    {% else %}
+        🍽️
+    {% endif %}
+
+</div>
+
+
+                        <div class="produto-conteudo">
+
+                            <h3>{{ produto.nome }}</h3>
+
+                            <div class="preco">
+                                R$
+                                {{ "%.2f"|format(produto.preco_venda)|replace(".", ",") }}
+                            </div>
+                            
+                           {% if produto.quantidade > 0 %}
+    <button
+        class="btn-adicionar"
+        type="button"
+        onclick="adicionarProduto({{ produto.id }}, '{{ produto.nome|replace("'", "\\'") }}', {{ produto.preco_venda }})"
+    >
+        ➕ Adicionar
+    </button>
+{% else %}
+    <p class="indisponivel">
+        Produto indisponível no momento
+    </p>
+{% endif %}
+                        </div>
+
+                    </article>
+
+            {% endfor %}
+
+                    </div>
+                </section>
+
+        {% else %}
+
+            <div class="vazio">
+                <h2>Cardápio vazio</h2>
+                <p>Nenhum produto disponível no momento.</p>
+            </div>
+
+        {% endif %}
+
+        <button
+            type="button"
+            class="btn-carrinho"
+            onclick="abrirCarrinho()"
+        >
+            🛒 Ver pedido
+            <span id="contador-carrinho">0</span>
+        </button>
+
+        <section id="carrinho-painel" class="carrinho-painel">
+
+    <h2>🛒 Seu pedido</h2>
+
+    <div id="lista-carrinho"></div>
+
+    <div class="carrinho-total">
+        <span>Total:</span>
+        <span id="total-carrinho">R$ 0,00</span>
+    </div>
+
+    <button
+        type="button"
+        class="btn-enviar-pedido"
+        onclick="enviarPedido()"
+    >
+        🟢 Enviar pedido
+    </button>
+
+</section>
+
+        <section id="carrinho-painel" class="carrinho-painel">
+            <h2>🛒 Seu pedido</h2>
+            <div id="lista-carrinho"></div>
+            <div class="carrinho-total">
+                <span>Total:</span>
+                <span id="total-carrinho">R$ 0,00</span>
+            </div>
+            <button type="button" class="btn-enviar-pedido" onclick="enviarPedido()">
+                🟢 Enviar pedido
+            </button>
+        </section>
+
+</main>
+    
+    <footer>
+        Coelho Bar e Hamburgueria © 2026
+    </footer>
+
+    <script>
+        function alternarCategoria(botao) {
+            const produtos = botao.nextElementSibling;
+            const simbolo = botao.querySelector("span:last-child");
+
+            produtos.classList.toggle("aberto");
+
+            if (produtos.classList.contains("aberto")) {
+                simbolo.textContent = "−";
+            } else {
+                simbolo.textContent = "＋";
+            }
+        }
+
+        let carrinho = [];
+
+        function adicionarProduto(id, nome, preco) {
+            const produtoExistente = carrinho.find(
+                produto => produto.id === id
+            );
+
+            if (produtoExistente) {
+                produtoExistente.quantidade++;
+            } else {
+                carrinho.push({
+                    id: id,
+                    nome: nome,
+                    preco: preco,
+                    quantidade: 1
+                });
+            }
+
+            atualizarContador();
+        }
+
+        function atualizarContador() {
+            const contador = document.getElementById("contador-carrinho");
+
+            const total = carrinho.reduce(
+                (soma, produto) => soma + produto.quantidade,
+                0
+            );
+
+            contador.textContent = total;
+        }
+
+        function abrirCarrinho() {
+            const painel = document.getElementById("carrinho-painel");
+            painel.classList.toggle("aberto");
+            atualizarCarrinho();
+        }
+
+        function alterarQuantidade(id, alteracao) {
+            const produto = carrinho.find(produto => produto.id === id);
+            if (!produto) return;
+
+            produto.quantidade += alteracao;
+
+            if (produto.quantidade <= 0) {
+                carrinho = carrinho.filter(item => item.id !== id);
+            }
+
+            atualizarContador();
+            atualizarCarrinho();
+        }
+
+        function atualizarCarrinho() {
+            const lista = document.getElementById("lista-carrinho");
+            const totalElemento = document.getElementById("total-carrinho");
+
+            if (carrinho.length === 0) {
+                lista.innerHTML = '<div class="carrinho-vazio">Seu pedido está vazio.</div>';
+                totalElemento.textContent = "R$ 0,00";
+                return;
+            }
+
+            let total = 0;
+
+            lista.innerHTML = carrinho.map(produto => {
+                const subtotal = produto.preco * produto.quantidade;
+                total += subtotal;
+
+                return `
+                    <div class="item-carrinho">
+                        <div class="item-carrinho-info">
+                            <strong>${produto.nome}</strong>
+                            <span>R$ ${produto.preco.toFixed(2).replace(".", ",")} cada</span>
+                        </div>
+                        <div class="controles-carrinho">
+                            <button type="button" onclick="alterarQuantidade(${produto.id}, -1)">−</button>
+                            <span class="quantidade-carrinho">${produto.quantidade}</span>
+                            <button type="button" onclick="alterarQuantidade(${produto.id}, 1)">+</button>
+                        </div>
+                        <div class="subtotal-carrinho">R$ ${subtotal.toFixed(2).replace(".", ",")}</div>
+                    </div>`;
+            }).join("");
+
+            totalElemento.textContent = "R$ " + total.toFixed(2).replace(".", ",");
+        }
+
+       
+async function enviarPedido() {
+    if (carrinho.length === 0) {
+        alert("Seu pedido está vazio.");
+        return;
+    }
+
+    // Usa a mesa do QR Code, se existir.
+    let mesa = {{ mesa|default("null")|tojson }};
+
+    // No cardápio geral, pede o número da mesa.
+    if (mesa === null) {
+        const campoMesa = document.getElementById("numero-mesa");
+
+        if (!campoMesa || !campoMesa.value.trim()) {
+            alert("Informe o número da mesa.");
+            campoMesa?.focus();
+            return;
+        }
+
+        mesa = Number(campoMesa.value);
+
+        if (!Number.isInteger(mesa) || mesa < 1) {
+            alert("Informe um número de mesa válido.");
+            campoMesa?.focus();
+            return;
+        }
+    }
+
+    const botoesEnviar = document.querySelectorAll(
+        'button[onclick="enviarPedido()"]'
+    );
+
+    botoesEnviar.forEach(botao => {
+        botao.disabled = true;
+    });
+
+    try {
+        const resposta = await fetch("/pedido/enviar", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                mesa: mesa,
+                itens: carrinho
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok || !dados.sucesso) {
+            alert(dados.mensagem || "Não foi possível enviar o pedido.");
+            return;
+        }
+
+        alert(dados.mensagem);
+
+        // Limpa o carrinho apenas após a confirmação do servidor.
+        carrinho = [];
+        atualizarContador();
+
+    } catch (erro) {
+        console.error("Erro ao enviar pedido:", erro);
+        alert("Não foi possível confirmar o envio. Confira os pedidos antes de tentar novamente.");
+    } finally {
+        botoesEnviar.forEach(botao => {
+            botao.disabled = false;
+        });
+    }
+}
+
+    </script>
+
+</body>
+
+</html>

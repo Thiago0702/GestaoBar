@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Estoque - Bar do Coelho</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #ddd;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 25px auto;
+            padding: 0 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo label {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .campo input,
+        .campo select {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            outline: none;
+            border-color: #555;
+        }
+
+        .botao {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #198754;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .botao:hover {
+            opacity: 0.9;
+        }
+
+        .erro {
+            background: #f8d7da;
+            color: #842029;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #222;
+            color: white;
+        }
+
+        .estoque-baixo {
+            font-weight: bold;
+        }
+
+        .ativo {
+            font-weight: bold;
+        }
+
+        .vazio {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        .voltar {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #222;
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            header h1 {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🍻 Bar do Coelho</h1>
+    <p>Cadastro e Controle de Estoque</p>
+</header>
+
+<div class="container">
+
+    <a href="{{ url_for('inicio') }}" class="voltar">
+        ← Voltar para o início
+    </a>
+
+    <div class="card">
+
+        <h2>📦 Cadastrar Mercadoria</h2>
+
+        {% if erro %}
+            <div class="erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="form-grid">
+
+                <div class="campo">
+                    <label for="nome">
+                        Nome da mercadoria
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Ex.: Batata frita"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="categoria">
+                        Categoria
+                    </label>
+
+                    <select
+                        id="categoria"
+                        name="categoria"
+                        required
+                    >
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        <option value="Cervejas">
+                            🍺 Cervejas
+                        </option>
+
+                        <option value ="Cervejas Artesanais">
+                            🍻Cervejas Artesanais
+                        </option>
+
+                        <option value="Refrigerantes">
+                            🥤 Refrigerantes
+                        </option>
+
+                        <option value="Águas">
+                            💧 Águas
+                        </option>
+
+                        <option value="Bebidas">
+                            🧃 Bebidas
+                        </option>
+
+                        <option value="Hambúrgueres">
+                            🍔 Hambúrgueres
+                        </option>
+
+                        <option value="Beirutes">
+                            🥙 Beirutes
+                        </option>
+
+                        <option value="Lanches">
+                            🥪 Lanches
+                        </option>
+
+                        <option value="Porções">
+                            🍟 Porções
+                        </option>
+
+                        <option value="Outros">
+                            📦 Outros
+                        </option>
+
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="preco_custo">
+                        Preço de custo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="preco_custo"
+                        name="preco_custo"
+                        step="0.01"
+                        min="0"
+                        placeholder="0,00"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="preco_venda">
+                        Preço de venda
+                    </label>
+
+                    <input
+                        type="number"
+                        id="preco_venda"
+                        name="preco_venda"
+                        step="0.01"
+                        min="0"
+                        placeholder="0,00"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="quantidade">
+                        Quantidade inicial
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantidade"
+                        name="quantidade"
+                        min="0"
+                        value="0"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="estoque_minimo">
+                        Estoque mínimo
+                    </label>
+
+                    <input
+                        type="number"
+                        id="estoque_minimo"
+                        name="estoque_minimo"
+                        min="0"
+                        value="0"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button type="submit" class="botao">
+                ➕ CADASTRAR MERCADORIA
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>📊 Estoque Atual</h2>
+
+        <div class="tabela-container">
+
+            {% if produtos %}
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Categoria</th>
+                            <th>Custo</th>
+                            <th>Venda</th>
+                            <th>Quantidade</th>
+                            <th>Estoque mínimo</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for produto in produtos %}
+
+                            <tr>
+
+                                <td>
+                                    {{ produto.nome }}
+                                </td>
+
+                                <td>
+                                    {{ produto.categoria }}
+                                </td>
+
+                                <td>
+                                    R$ {{ "%.2f"|format(produto.preco_custo) }}
+                                </td>
+
+                                <td>
+                                    R$ {{ "%.2f"|format(produto.preco_venda) }}
+                                </td>
+
+                                <td>
+                                    {{ produto.quantidade }}
+                                </td>
+
+                                <td>
+                                    {{ produto.estoque_minimo }}
+                                </td>
+
+                                <td>
+
+                                    {% if produto.quantidade <= produto.estoque_minimo %}
+
+                                        <span class="estoque-baixo">
+                                            ⚠️ Estoque baixo
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="ativo">
+                                            🟢 Normal
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+                                <td>
+
+    <a
+        href="{{ url_for('editar_mercadoria', produto_id=produto.id) }}"
+        style="
+            display: inline-block;
+            padding: 8px 10px;
+            border-radius: 7px;
+            background: #ffc107;
+            color: #222;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 5px;
+        "
+    >
+        ✏️ EDITAR
+    </a>
+
+    <form
+        method="POST"
+        action="{{ url_for('excluir_mercadoria', produto_id=produto.id) }}"
+        style="display: inline;"
+        onsubmit="return confirm('Tem certeza que deseja excluir esta mercadoria?');"
+    >
+        <button
+            type="submit"
+            style="
+                border: none;
+                border-radius: 7px;
+                padding: 8px 10px;
+                background: #dc3545;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+            "
+        >
+            🗑️ EXCLUIR
+        </button>
+    </form>
+
+</td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            {% else %}
+
+                <div class="vazio">
+                    Nenhuma mercadoria cadastrada ainda.
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cadastro - Bar do Coelho</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: #171717;
+            padding: 20px;
+        }
+
+        .cadastro-container {
+            width: 100%;
+            max-width: 440px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .logo p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .campo {
+            margin-bottom: 15px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .campo input:focus {
+            border-color: #222;
+        }
+
+        .senha-container {
+            position: relative;
+        }
+
+        .senha-container input {
+            padding-right: 48px;
+        }
+
+        .mostrar-senha {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 19px;
+        }
+
+        .botao {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .botao:hover {
+            opacity: 0.9;
+        }
+
+        .erro {
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #ffe5e5;
+            color: #b00020;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .voltar {
+            margin-top: 18px;
+            text-align: center;
+        }
+
+        .voltar a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .voltar a:hover {
+            text-decoration: underline;
+        }
+
+        .observacao {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cadastro-container">
+
+        <div class="logo">
+            <h1>🍻 Bar do Coelho</h1>
+            <p>Cadastro de funcionário</p>
+        </div>
+
+        {% if erro %}
+            <div class="erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div class="campo">
+                <label for="nome">Nome completo</label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Digite seu nome completo"
+                    required
+                    autocomplete="name"
+                >
+            </div>
+
+            <div class="campo">
+                <label for="celular">Celular</label>
+
+                <input
+                    type="tel"
+                    id="celular"
+                    name="celular"
+                    placeholder="(00) 00000-0000"
+                    required
+                    autocomplete="tel"
+                >
+            </div>
+
+            <div class="campo">
+                <label for="email">E-mail</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Digite seu e-mail"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="campo">
+                <label for="usuario">Usuário</label>
+
+                <input
+                    type="text"
+                    id="usuario"
+                    name="usuario"
+                    placeholder="Escolha seu usuário"
+                    required
+                    autocomplete="username"
+                >
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+
+                <div class="senha-container">
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Crie sua senha"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                    <button
+                        type="button"
+                        class="mostrar-senha"
+                        onclick="mostrarSenha('senha')"
+                    >
+                        👁
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="confirmar_senha">Confirmar senha</label>
+
+                <div class="senha-container">
+
+                    <input
+                        type="password"
+                        id="confirmar_senha"
+                        name="confirmar_senha"
+                        placeholder="Digite a senha novamente"
+                        required
+                        autocomplete="new-password"
+                    >
+
+                    <button
+                        type="button"
+                        class="mostrar-senha"
+                        onclick="mostrarSenha('confirmar_senha')"
+                    >
+                        👁
+                    </button>
+
+                </div>
+            </div>
+
+            <button type="submit" class="botao">
+                CRIAR CONTA
+            </button>
+
+        </form>
+
+        <div class="observacao">
+            Após o cadastro, sua conta ficará aguardando
+            aprovação do administrador.
+        </div>
+
+        <div class="voltar">
+            <a href="{{ url_for('login') }}">
+                ← Voltar para o login
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+
+        function mostrarSenha(id) {
+
+            const campo = document.getElementById(id);
+
+            if (campo.type === "password") {
+                campo.type = "text";
+            } else {
+                campo.type = "password";
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
