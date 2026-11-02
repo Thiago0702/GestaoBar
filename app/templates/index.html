@@ -87,13 +87,30 @@
                 </div>
 
                 <div class="topbar-actions">
-                    <button class="notification" onclick="window.location.href='{{ url_for('pedidos') }}'">
-                            🔔
-                        {% if pedidos_novos > 0 %}
-                    <span>{{ pedidos_novos }}</span>
-                        {% endif %}
-                    </button>
-                </div>
+    <div class="notification-container">
+        <button
+            type="button"
+            class="notification"
+            id="botao-notificacoes"
+            aria-label="Abrir notificações"
+        >
+            🔔
+            <span id="contador-notificacoes"
+                  {% if pedidos_novos == 0 %}style="display: none;"{% endif %}>
+                {{ pedidos_novos }}
+            </span>
+        </button>
+
+        <div id="painel-notificacoes" style="display: none;">
+            <div class="notificacoes-cabecalho">
+                <strong>Pedidos novos</strong>
+            </div>
+            <div id="lista-notificacoes">
+                <p>Carregando pedidos...</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             </header>
 

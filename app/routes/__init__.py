@@ -80,7 +80,7 @@ def inicio():
     ]
 
     dia_consulta = dias_semana[hoje.weekday()]
-
+        
 
     vendas_hoje = Venda.query.filter(
         db.func.date(Venda.data_hora) == hoje
@@ -93,10 +93,11 @@ def inicio():
 
     quantidade_vendas = len(vendas_hoje)
 
-    pedidos_novos = Venda.query.filter_by(
-        status="recebido"
-    ).count()
-
+    pedidos_novos = Venda.query.filter(
+    Venda.status == "recebido",
+    Venda.tipo_pedido.in_(["mesa", "delivery"])
+).count()
+    
     if quantidade_vendas > 0:
         ticket_medio = (
             faturamento_hoje / quantidade_vendas
@@ -315,7 +316,7 @@ def bloquear_funcionario(usuario_id):
 
     db.session.commit()
 
-    return redirect(url_for("funcionarios"))
+    return redirect(url_for("funcionarios"))  
 
 @app.route("/admin/funcionarios/<int:usuario_id>/reativar", methods=["POST"])
 @login_required
@@ -330,7 +331,7 @@ def reativar_funcionario(usuario_id):
 
     db.session.commit()
 
-    return redirect(url_for("funcionarios"))
+    return redirect(url_for("funcionarios"))      
 
 @app.route("/admin/mercadorias", methods=["GET", "POST"])
 @login_required
@@ -539,11 +540,11 @@ def finalizar_venda():
         })
 
     nova_venda = Venda(
-        usuario_id=current_user.id,
-        total=total,
-        forma_pagamento=forma_pagamento
-    )
-
+    usuario_id=current_user.id,
+    total=total,
+    forma_pagamento=forma_pagamento,
+    tipo_pedido="balcao"
+)
     db.session.add(nova_venda)
 
     for item in itens_venda:
@@ -1013,6 +1014,7 @@ def delivery_pedido_preparo(venda_id):
     venda.status = "em_preparo"
     db.session.commit()
 
+
     return redirect(url_for("pedidos_delivery"))
 
 
@@ -1060,6 +1062,7 @@ def delivery_saiu_entrega(venda_id):
     "/delivery/pedido/<int:venda_id>/entregue",
     methods=["POST"]
 )
+
 @login_required
 def delivery_pedido_entregue(venda_id):
     venda = Venda.query.get_or_404(venda_id)
@@ -1351,8 +1354,8 @@ def delivery_finalizar():
 
         # Salvar venda, itens e descontos juntos.
         db.session.commit()
-
-
+        
+                
         return {
             "sucesso": True,
             "mensagem": f"Pedido #{venda.id} recebido!",
@@ -1367,6 +1370,28 @@ def delivery_finalizar():
             "sucesso": False,
             "mensagem": "Não foi possível registrar o pedido. Tente novamente."
         }, 500
+
+@app.route("/api/pedidos/novos")
+@login_required
+def consultar_pedidos_novos():
+
+    pedidos = Venda.query.filter(
+        Venda.status == "recebido",
+        Venda.tipo_pedido.in_(["mesa", "delivery"])
+    ).order_by(
+        Venda.id.desc()
+    ).all()
+
+    return {
+        "total": len(pedidos),
+        "pedidos": [
+            {
+                "id": pedido.id,
+                "tipo": pedido.tipo_pedido
+            }
+            for pedido in pedidos
+        ]
+    }
 
 
 
