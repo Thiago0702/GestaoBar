@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -20,22 +21,22 @@
         <aside class="sidebar">
 
             <div class="logo">
-    <div class="logo-icon">
-        <img
-            src="{{ url_for('static', filename='img/logo_coelho_bar.jpg') }}"
-            alt="Coelho Bar e Hamburgueria"
-        >
-    </div>
+                <div class="logo-icon">
+                    <img
+                        src="{{ url_for('static', filename='img/logo_coelho_bar.jpg') }}"
+                        alt="Coelho Bar e Hamburgueria"
+                    >
+                </div>
 
-    <div>
-        <h2>Coelho Bar e Hamburgueria</h2>
-        <span>Gestão de Vendas</span>
-    </div>
-</div>
+                <div>
+                    <h2>Coelho Bar e Hamburgueria</h2>
+                    <span>Gestão de Vendas</span>
+                </div>
+            </div>
 
             <nav class="menu">
 
-                <a href="#" class="menu-item active">
+                <a href="{{ url_for('inicio') }}" class="menu-item active">
                     <span>🏠</span>
                     Dashboard
                 </a>
@@ -74,7 +75,6 @@
 
         </aside>
 
-
         <!-- CONTEÚDO PRINCIPAL -->
         <main class="main-content">
 
@@ -87,33 +87,32 @@
                 </div>
 
                 <div class="topbar-actions">
-    <div class="notification-container">
-        <button
-            type="button"
-            class="notification"
-            id="botao-notificacoes"
-            aria-label="Abrir notificações"
-        >
-            🔔
-            <span id="contador-notificacoes"
-                  {% if pedidos_novos == 0 %}style="display: none;"{% endif %}>
-                {{ pedidos_novos }}
-            </span>
-        </button>
 
-        <div id="painel-notificacoes" style="display: none;">
-            <div class="notificacoes-cabecalho">
-                <strong>Pedidos novos</strong>
-            </div>
-            <div id="lista-notificacoes">
-                <p>Carregando pedidos...</p>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="notification-container">
+
+                        <button
+                            type="button"
+                            class="notification"
+                            id="botao-notificacoes"
+                            onclick="window.location.href='{{ url_for('notificacoes') }}'"
+                            aria-label="Abrir Central de Notificações"
+                        >
+                            🔔
+
+                            <span
+                                id="contador-notificacoes"
+                                {% if pedidos_novos == 0 %}style="display: none;"{% endif %}
+                            >
+                                {{ pedidos_novos }}
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
 
             </header>
-
 
             <!-- SAUDAÇÃO -->
             <section class="welcome">
@@ -124,11 +123,11 @@
                     <p>
                         Aqui está o resumo do seu bar em {{ data_consulta }}.
                     </p>
-
                 </div>
 
                 <div class="date-card">
-                   <label
+
+                    <label
                         for="calendario"
                         style="cursor: pointer;"
                         onclick="abrirCalendario()"
@@ -137,19 +136,20 @@
                     </label>
 
                     <div>
-                    <strong id="current-date">{{ data_consulta }}</strong>
-                    <span id="current-day">{{ dia_consulta }}</span>
+                        <strong id="current-date">{{ data_consulta }}</strong>
+                        <span id="current-day">{{ dia_consulta }}</span>
+                    </div>
+
+                    <input
+                        type="date"
+                        id="calendario"
+                        onchange="selecionarData()"
+                        style="position: absolute; opacity: 0; width: 1px; height: 1px;"
+                    >
+
                 </div>
 
-                <input
-                    type="date"
-                    id="calendario"
-                    onchange="selecionarData()"
-                    style="position: absolute; opacity: 0; width: 1px; height: 1px;"
-                >
-                </div>
             </section>
-
 
             <!-- INDICADORES -->
             <section class="stats-grid">
@@ -174,7 +174,6 @@
 
                 </div>
 
-
                 <div class="stat-card blue">
 
                     <div class="stat-icon">🛒</div>
@@ -193,7 +192,6 @@
 
                 </div>
 
-
                 <div class="stat-card purple">
 
                     <div class="stat-icon">🎫</div>
@@ -204,7 +202,7 @@
                         </span>
 
                         <strong>
-                           R$ {{ "%.2f"|format(ticket_medio)|replace(".", ",") }}
+                            R$ {{ "%.2f"|format(ticket_medio)|replace(".", ",") }}
                         </strong>
 
                         <small>
@@ -213,7 +211,6 @@
                     </div>
 
                 </div>
-
 
                 <div class="stat-card orange">
 
@@ -235,7 +232,6 @@
 
                 </div>
 
-
                 <div class="stat-card red">
 
                     <div class="stat-icon">🗑️</div>
@@ -255,7 +251,6 @@
                     </div>
 
                 </div>
-
 
                 <div class="stat-card cyan">
 
@@ -277,7 +272,6 @@
 
             </section>
 
-
             <!-- ESTOQUE BAIXO -->
             <section class="panel">
 
@@ -294,10 +288,7 @@
 
                 </div>
 
-
-
-            </section>
-                            {% if produtos_estoque_baixo %}
+                {% if produtos_estoque_baixo %}
 
                     <div class="estoque-baixo-lista">
 
@@ -326,61 +317,33 @@
 
                 {% else %}
 
-                   {% if produtos_estoque_baixo %}
+                    <div class="empty-state">
 
-    <div class="estoque-baixo-lista">
+                        <div class="empty-icon">📦</div>
 
-        {% for produto in produtos_estoque_baixo %}
+                        <h3>Nenhum produto com estoque baixo</h3>
 
-            <div class="produto-estoque-baixo">
+                        <p>
+                            Os produtos que atingirem o estoque mínimo
+                            aparecerão aqui.
+                        </p>
 
-                <div>
-                    <strong>{{ produto.nome }}</strong>
-
-                    <small>
-                        Estoque atual: {{ produto.quantidade }}
-                        | Mínimo: {{ produto.estoque_minimo }}
-                    </small>
-                </div>
-
-                <span class="estoque-alerta">
-                    ⚠️ Baixo
-                </span>
-
-            </div>
-
-        {% endfor %}
-
-    </div>
-
-{% else %}
-
-    <div class="empty-state">
-
-        <div class="empty-icon">📦</div>
-
-        <h3>Nenhum produto com estoque baixo</h3>
-
-        <p>
-            Os produtos que atingirem o estoque mínimo
-            aparecerão aqui.
-        </p>
-
-    </div>
-
-{% endif %}
+                    </div>
 
                 {% endif %}
 
+            </section>
 
             <!-- AÇÕES RÁPIDAS -->
             <section class="panel">
 
                 <div class="panel-header">
+
                     <div>
                         <h2>Ações rápidas</h2>
                         <p>Operações mais utilizadas</p>
                     </div>
+
                 </div>
 
                 <div class="quick-actions">
@@ -393,18 +356,26 @@
                         <strong>Nova Venda</strong>
                     </a>
 
-                    <a href="{{ url_for('pedidos_delivery') }}" class="action-button blue-button">
+                    <a
+                        href="{{ url_for('pedidos_delivery') }}"
+                        class="action-button blue-button"
+                    >
                         <span>🚚</span>
                         <strong>Delivery</strong>
                     </a>
 
-                    <a href="{{ url_for('registrar_perda') }}" class="action-button orange-button">
+                    <a
+                        href="{{ url_for('registrar_perda') }}"
+                        class="action-button orange-button"
+                    >
                         <span>🗑️</span>
                         <strong>Registrar Perda</strong>
                     </a>
 
-
-                   <a href="{{ url_for('buscar_produto') }}" class="action-button purple-button">
+                    <a
+                        href="{{ url_for('buscar_produto') }}"
+                        class="action-button purple-button"
+                    >
                         <span>🔎</span>
                         <strong>Buscar Produto</strong>
                     </a>
@@ -412,8 +383,6 @@
                 </div>
 
             </section>
-
-
 
             <!-- RODAPÉ -->
             <footer>
@@ -432,11 +401,10 @@
 
     </div>
 
-
     <!-- MENU MOBILE -->
     <nav class="mobile-menu">
 
-        <a href="#" class="active">
+        <a href="{{ url_for('inicio') }}" class="active">
             <span>🏠</span>
             <small>Início</small>
         </a>
@@ -451,7 +419,7 @@
             <small>Estoque</small>
         </a>
 
-         <a href="{{ url_for('historico_perdas') }}">
+        <a href="{{ url_for('historico_perdas') }}">
             <span>📊</span>
             <small>Histórico de Perdas</small>
         </a>
@@ -462,7 +430,6 @@
         </a>
 
     </nav>
-
 
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 

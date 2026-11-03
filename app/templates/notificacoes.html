@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Central de Notificações | GestãoBar</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .central-notificacoes {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .central-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .central-topo h1 {
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .central-topo p {
+            color: #aaa;
+        }
+
+        .btn-voltar {
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #d4af37;
+            color: #111;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .secao-notificacoes {
+            background: #1b1b1b;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .secao-notificacoes h2 {
+            color: #d4af37;
+            margin: 0 0 20px;
+        }
+
+        .notificacao-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            background: #252525;
+            border: 1px solid #444;
+            border-left: 4px solid #d4af37;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .notificacao-card strong {
+            color: #fff;
+            font-size: 17px;
+        }
+
+        .notificacao-card p {
+            color: #bbb;
+            margin: 7px 0 0;
+        }
+
+        .btn-abrir {
+            display: inline-block;
+            padding: 10px 16px;
+            border-radius: 7px;
+            background: #d4af37;
+            color: #111;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .vazio {
+            color: #999;
+            padding: 15px 0;
+        }
+
+        .contador-secao {
+            display: inline-block;
+            background: #333;
+            color: #d4af37;
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 13px;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 600px) {
+            .secao-notificacoes {
+                padding: 15px;
+            }
+
+            .notificacao-card {
+                align-items: flex-start;
+            }
+
+            .btn-abrir {
+                width: 100%;
+                text-align: center;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <main class="main-content">
+            <div class="central-notificacoes">
+
+                <header class="central-topo">
+                    <div>
+                        <h1>🔔 Central de Notificações</h1>
+                        <p>Acompanhe os novos pedidos do estabelecimento.</p>
+                    </div>
+
+                    <a href="{{ url_for('inicio') }}" class="btn-voltar">
+                        ← Voltar ao Dashboard
+                    </a>
+                </header>
+
+                <section class="secao-notificacoes">
+                    <h2>
+                        🚚 Pedidos de Delivery
+                        <span class="contador-secao">
+                            {{ pedidos_delivery|length }}
+                        </span>
+                    </h2>
+
+                    {% if pedidos_delivery %}
+                        {% for pedido in pedidos_delivery %}
+                            <article class="notificacao-card">
+                                <div>
+                                    <strong>Pedido Delivery #{{ pedido.id }}</strong>
+                                    <p>Cliente: {{ pedido.cliente_nome or 'Não informado' }}</p>
+                                    <p>Bairro: {{ pedido.cliente_bairro or 'Não informado' }}</p>
+                                    <p>Total: R$ {{ "%.2f"|format(pedido.total or 0) }}</p>
+                                </div>
+
+                                <a href="{{ url_for('pedidos_delivery') }}"
+                                   class="btn-abrir">
+                                    Abrir Delivery
+                                </a>
+                            </article>
+                        {% endfor %}
+                    {% else %}
+                        <p class="vazio">Nenhum pedido novo de Delivery.</p>
+                    {% endif %}
+                </section>
+
+                <section class="secao-notificacoes">
+                    <h2>
+                        🍽️ Pedidos de Mesa
+                        <span class="contador-secao">
+                            {{ pedidos_mesa|length }}
+                        </span>
+                    </h2>
+
+                    {% if pedidos_mesa %}
+                        {% for pedido in pedidos_mesa %}
+                            <article class="notificacao-card">
+                                <div>
+                                    <strong>Pedido de Mesa #{{ pedido.id }}</strong>
+                                    <p>Mesa: {{ pedido.mesa or 'Não informada' }}</p>
+                                    <p>Total: R$ {{ "%.2f"|format(pedido.total or 0) }}</p>
+                                </div>
+
+                                <a href="{{ url_for('pedidos') }}"
+                                   class="btn-abrir">
+                                    Abrir Pedidos de Mesa
+                                </a>
+                            </article>
+                        {% endfor %}
+                    {% else %}
+                        <p class="vazio">Nenhum pedido novo de Mesa.</p>
+                    {% endif %}
+                </section>
+
+            </div>
+        </main>
+    </div>
+</body>
+</html>

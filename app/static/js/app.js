@@ -1,3 +1,4 @@
+
 function atualizarData() {
     const agora = new Date();
 
@@ -20,7 +21,6 @@ function atualizarData() {
     }
 }
 
-
 function abrirCalendario() {
     const calendario = document.getElementById("calendario");
 
@@ -28,7 +28,6 @@ function abrirCalendario() {
         calendario.showPicker();
     }
 }
-
 
 function selecionarData() {
     const calendario = document.getElementById("calendario");
@@ -41,29 +40,22 @@ function selecionarData() {
 }
 
 // ========================================
-// CENTRAL DE NOTIFICAÇÕES - GESTÃOBAR
+// NOTIFICAÇÕES - GESTÃOBAR
 // ========================================
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const botao = document.getElementById("botao-notificacoes");
-    const painel = document.getElementById("painel-notificacoes");
     const contador = document.getElementById("contador-notificacoes");
-    const lista = document.getElementById("lista-notificacoes");
 
-    if (!botao || !painel || !contador || !lista) {
+    if (!contador) {
         return;
     }
 
     let pedidosConhecidos = null;
     let audioContext = null;
 
-    // Abre e fecha o painel
-    botao.addEventListener("click", function () {
-        const aberto = painel.style.display !== "none";
-        painel.style.display = aberto ? "none" : "block";
-
-        // Prepara o áudio após interação do usuário
+    // Prepara o áudio após interação do usuário
+    document.addEventListener("click", function prepararAudio() {
         if (!audioContext) {
             const AudioContext =
                 window.AudioContext || window.webkitAudioContext;
@@ -76,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (audioContext && audioContext.state === "suspended") {
             audioContext.resume();
         }
-    });
+    }, { once: true });
 
     // Som de notificação
     function tocarSom() {
@@ -92,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         oscilador.frequency.value = 880;
         volume.gain.setValueAtTime(0.15, audioContext.currentTime);
+
         volume.gain.exponentialRampToValueAtTime(
             0.001,
             audioContext.currentTime + 0.4
@@ -101,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
         oscilador.stop(audioContext.currentTime + 0.4);
     }
 
-    // Consulta os pedidos novos
+    // Consulta pedidos novos
     async function atualizarNotificacoes() {
         try {
             const resposta = await fetch("/api/pedidos/novos");
@@ -114,9 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
             const pedidos = dados.pedidos || [];
 
             contador.textContent = dados.total || 0;
-            contador.style.display = dados.total > 0 ? "inline-flex" : "none";
+            contador.style.display =
+                dados.total > 0 ? "inline-flex" : "none";
 
-            // Na primeira consulta, apenas registra os pedidos existentes.
             const idsAtuais = pedidos.map(pedido =>
                 `${pedido.tipo}-${pedido.id}`
             );
@@ -132,30 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             pedidosConhecidos = idsAtuais;
-
-            // Atualiza a lista do painel
-            lista.innerHTML = "";
-
-            if (pedidos.length === 0) {
-                lista.innerHTML = "<p>Nenhum pedido novo.</p>";
-                return;
-            }
-
-            pedidos.forEach(pedido => {
-                const item = document.createElement("a");
-
-                item.className = "notificacao-item";
-
-                if (pedido.tipo === "delivery") {
-                    item.href = "/delivery/pedidos";
-                    item.textContent = `🚚 Pedido Delivery #${pedido.id}`;
-                } else {
-                    item.href = "/pedidos";
-                    item.textContent = `🍽️ Pedido de Mesa #${pedido.id}`;
-                }
-
-                lista.appendChild(item);
-            });
 
         } catch (erro) {
             console.error("Erro nas notificações:", erro);

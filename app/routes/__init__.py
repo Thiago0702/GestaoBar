@@ -614,18 +614,18 @@ def fechamento():
         venda.total
         for venda in vendas_hoje
         if venda.forma_pagamento == "Pix"
-    )
+    )   
 
     debito = sum(
         venda.total
         for venda in vendas_hoje
-        if venda.forma_pagamento == "Débito"
+        if venda.forma_pagamento in ("Débito", "Cartão de débito")
     )
 
     credito = sum(
         venda.total
         for venda in vendas_hoje
-        if venda.forma_pagamento == "Crédito"
+        if venda.forma_pagamento in ("Crédito", "Cartão de crédito")
     )
 
     total_vendas = sum(
@@ -945,6 +945,29 @@ def pedidos_delivery():
         vendas=vendas
     )
 
+@app.route("/notificacoes")
+@login_required
+def notificacoes():
+    pedidos_novos = Venda.query.filter(
+        Venda.status == "recebido",
+        Venda.tipo_pedido.in_(["mesa", "delivery"])
+    ).order_by(Venda.id.desc()).all()
+
+    pedidos_delivery = [
+        pedido for pedido in pedidos_novos
+        if pedido.tipo_pedido == "delivery"
+    ]
+
+    pedidos_mesa = [
+        pedido for pedido in pedidos_novos
+        if pedido.tipo_pedido == "mesa"
+    ]
+
+    return render_template(
+        "notificacoes.html",
+        pedidos_delivery=pedidos_delivery,
+        pedidos_mesa=pedidos_mesa
+    )
 
 @app.route("/pedido/<int:venda_id>/preparo", methods=["POST"])
 @login_required
